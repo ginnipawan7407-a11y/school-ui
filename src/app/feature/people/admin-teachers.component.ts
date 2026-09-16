@@ -89,7 +89,7 @@ export class AdminTeachersComponent {
     this.editingTeacherId = teacher.id;
     Object.assign(this.form, {
       name: teacher.name,
-      gender: teacher.gender,
+      gender: teacher.gender ?? '',
       username: teacher.username,
       empId: teacher.employeeId,
       email: teacher.email,
@@ -97,8 +97,8 @@ export class AdminTeachersComponent {
       address: teacher.address,
       specialization: teacher.specialization,
       qualification: teacher.qualification,
-      experience: String(teacher.experienceYears),
-      joiningDate: teacher.joiningDate
+      experience: String(teacher.experienceYears ?? teacher.experience ?? 0),
+      joiningDate: (teacher.joiningDate || teacher.dateOfJoining || '').slice(0, 10)
     });
     this.activeTab = 'add';
     this.message = '';
