@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { App } from './app';
 import { routes } from './app.routes';
+import { AuthSessionService } from './core/auth/auth-session.service';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -22,6 +23,7 @@ describe('App', () => {
 
   it('should render the teacher workspace by default', async () => {
     const fixture = TestBed.createComponent(App);
+    TestBed.inject(AuthSessionService).setSession('test-token', 'Teacher');
     await TestBed.inject(Router).navigateByUrl('/');
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;

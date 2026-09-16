@@ -17,26 +17,29 @@ import { TeacherEventsComponent } from './feature/events/teacher-events.componen
 import { StudentAnnouncementsComponent } from './feature/announcements/student-announcements.component';
 import { StudentEventsComponent } from './feature/events/student-events.component';
 import { StudentResultComponent } from './feature/exams/student-result.component';
+import { authGuard } from './core/auth/auth.guard';
+import { LoginComponent } from './feature/auth/login.component';
 
 export const routes: Routes = [
-	{ path: '', component: DashboardPageComponent },
-	{ path: 'workspace/attendance', component: TeacherAttendanceComponent },
-	{ path: 'workspace/homework', component: TeacherHomeworkComponent },
-	{ path: 'workspace/leave-management', component: TeacherLeaveComponent },
-	{ path: 'workspace/student-details', component: TeacherStudentsComponent },
-	{ path: 'workspace/announcements', component: TeacherAnnouncementsComponent },
-	{ path: 'workspace/events', component: TeacherEventsComponent },
-	{ path: 'workspace/exam-result', component: TeacherExamResultsComponent },
-	{ path: 'student/attendance', component: StudentAttendanceComponent },
-	{ path: 'student/announcements', component: StudentAnnouncementsComponent },
-	{ path: 'student/events', component: StudentEventsComponent },
-	{ path: 'student/result', component: StudentResultComponent },
-	{ path: 'student/leave', component: StudentLeaveComponent },
-	{ path: 'student/classmates', component: StudentClassmatesComponent },
-	{ path: 'student/teacher', component: StudentTeachersComponent },
-	{ path: 'student/homework', component: StudentHomeworkComponent },
-	{ path: 'workspace/:id', component: FeaturePageComponent },
-	{ path: 'profile', component: FeaturePageComponent },
-	{ path: 'notifications', component: FeaturePageComponent },
+	{ path: 'login', component: LoginComponent },
+	{ path: '', component: DashboardPageComponent, canActivate: [authGuard] },
+	{ path: 'workspace/attendance', component: TeacherAttendanceComponent, canActivate: [authGuard] },
+	{ path: 'workspace/homework', component: TeacherHomeworkComponent, canActivate: [authGuard] },
+	{ path: 'workspace/leave-management', component: TeacherLeaveComponent, canActivate: [authGuard] },
+	{ path: 'workspace/student-details', component: TeacherStudentsComponent, canActivate: [authGuard] },
+	{ path: 'workspace/announcements', component: TeacherAnnouncementsComponent, canActivate: [authGuard] },
+	{ path: 'workspace/events', component: TeacherEventsComponent, canActivate: [authGuard] },
+	{ path: 'workspace/exam-result', component: TeacherExamResultsComponent, canActivate: [authGuard] },
+	{ path: 'student/attendance', component: StudentAttendanceComponent, canActivate: [authGuard] },
+	{ path: 'student/announcements', component: StudentAnnouncementsComponent, canActivate: [authGuard] },
+	{ path: 'student/events', component: StudentEventsComponent, canActivate: [authGuard] },
+	{ path: 'student/result', component: StudentResultComponent, canActivate: [authGuard] },
+	{ path: 'student/leave', component: StudentLeaveComponent, canActivate: [authGuard] },
+	{ path: 'student/classmates', component: StudentClassmatesComponent, canActivate: [authGuard] },
+	{ path: 'student/teacher', component: StudentTeachersComponent, canActivate: [authGuard] },
+	{ path: 'student/homework', component: StudentHomeworkComponent, canActivate: [authGuard] },
+	{ path: 'workspace/:id', component: FeaturePageComponent, canActivate: [authGuard] },
+	{ path: 'profile', component: FeaturePageComponent, canActivate: [authGuard] },
+	{ path: 'notifications', component: FeaturePageComponent, canActivate: [authGuard] },
 	{ path: '**', redirectTo: '' }
 ];
