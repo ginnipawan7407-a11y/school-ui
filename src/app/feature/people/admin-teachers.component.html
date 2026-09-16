@@ -8,7 +8,7 @@
       <h2 id="admin-teachers-title">Teacher records</h2>
       <div class="admin-data-tabs" role="tablist" aria-label="Teacher management actions">
         <button type="button" role="tab" [attr.aria-selected]="activeTab === 'add'" [class.active]="activeTab === 'add'" (click)="activeTab = 'add'">Add new</button>
-        <button type="button" role="tab" [attr.aria-selected]="activeTab === 'manage'" [class.active]="activeTab === 'manage'" (click)="activeTab = 'manage'">Manage</button>
+        <button type="button" role="tab" [attr.aria-selected]="activeTab === 'manage'" [class.active]="activeTab === 'manage'" (click)="showManage()">Manage</button>
       </div>
       @if (activeTab === 'add') {
         <form class="admin-people-form" (submit)="$event.preventDefault(); save()">
@@ -18,10 +18,31 @@
           <button class="save-attendance" type="submit">Add teacher</button>
         </form>
       } @else {
-        <div class="admin-manage-placeholder" role="status">
-          <strong>Teacher management</strong>
-          <span>Existing records will appear here when the management API is connected.</span>
-        </div>
+        @if (loadingTeachers()) {
+          <div class="admin-manage-placeholder" role="status">Loading teachers...</div>
+        } @else if (teachers().length) {
+          <div class="admin-student-list" aria-label="Teacher records">
+            @for (teacher of teachers(); track teacher.id) {
+              <article class="admin-student-card">
+                <div>
+                  <strong>{{ teacher.name }}</strong>
+                  <span>{{ teacher.gender || 'Gender not provided' }} · Employee ID {{ teacher.employeeId }}</span>
+                  <span>{{ teacher.qualification }} · {{ teacher.specialization }} · {{ teacher.experienceYears }} years' experience</span>
+                </div>
+                <div>
+                  <span>{{ teacher.email }}</span>
+                  <span>{{ teacher.phone }}</span>
+                  <span>Joined {{ teacher.joiningDate }}</span>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="admin-manage-placeholder" role="status">
+            <strong>No teachers found</strong>
+            <span>No teacher records are available.</span>
+          </div>
+        }
       }
       @if (message) { <p class="admin-data-message">{{ message }}</p> }
       @if (error) { <p class="admin-data-error" role="alert">{{ error }}</p> }

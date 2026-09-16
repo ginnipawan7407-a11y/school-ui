@@ -29,11 +29,31 @@ export interface AdminStudent {
   address: string;
   parentPhone: string;
 }
+export interface AdminTeacher {
+  id: number;
+  name: string;
+  gender: string;
+  email: string;
+  username: string;
+  employeeId: string;
+  qualification: string;
+  specialization: string;
+  joiningDate: string;
+  experienceYears: number;
+  address: string;
+  phone: string;
+}
 interface StudentResponse {
   status: string;
   code: number;
   message: string;
   data: AdminStudent[];
+}
+interface TeacherResponse {
+  status: string;
+  code: number;
+  message: string;
+  data: AdminTeacher[];
 }
 export interface Classmate { id: number; name: string; rollNumber: string; photoUrl: string; }
 export interface TeacherContact { id: number; name: string; subject: string; phone: string; email: string; isClassTeacher: boolean; photoUrl: string; }
@@ -71,6 +91,11 @@ export class PeopleService {
 
   getStudentsByClassAndSection(classId: number, section: string): Observable<AdminStudent[]> {
     return this.http.get<StudentResponse>(`/rest/user-service/api/v1/students/class/${classId}/section/${encodeURIComponent(section)}`)
+      .pipe(map(response => response.data));
+  }
+
+  getAdminTeachers(): Observable<AdminTeacher[]> {
+    return this.http.get<TeacherResponse>('/rest/user-service/api/v1/teachers')
       .pipe(map(response => response.data));
   }
 
