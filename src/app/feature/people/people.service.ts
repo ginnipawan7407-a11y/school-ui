@@ -57,6 +57,12 @@ interface TeacherResponse {
   message: string;
   data: AdminTeacher[];
 }
+interface TeacherDetailResponse {
+  status: string;
+  code: number;
+  message: string;
+  data: AdminTeacher;
+}
 export interface Classmate { id: number; name: string; rollNumber: string; photoUrl: string; }
 export interface TeacherContact { id: number; name: string; subject: string; phone: string; email: string; isClassTeacher: boolean; photoUrl: string; }
 
@@ -98,11 +104,12 @@ export class PeopleService {
 
   getAdminTeachers(): Observable<AdminTeacher[]> {
     return this.http.get<TeacherResponse>('/rest/user-service/api/v1/teachers')
-      .pipe(map(response => response.data.map(teacher => ({
-        ...teacher,
-        joiningDate: teacher.joiningDate || teacher.dateOfJoining || '',
-        experienceYears: teacher.experienceYears ?? teacher.experience ?? 0
-      }))));
+      .pipe(map(response => response.data.map(teacher => this.normalizeTeacher(teacher))));
+  }
+
+  getAdminTeacher(id: number): Observable<AdminTeacher> {
+    return this.http.get<TeacherDetailResponse>(`/rest/user-service/api/v1/teachers/${id}`)
+      .pipe(map(response => this.normalizeTeacher(response.data)));
   }
 
   updateStudent(student: AdminStudent): Observable<void> {
@@ -123,6 +130,14 @@ export class PeopleService {
         id: student.id, name: student.name, rollNumber: student.rollNumber, photoUrl: `https://i.pravatar.cc/160?img=${student.id + 10}`
       }))))
     );
+  }
+
+  private normalizeTeacher(teacher: AdminTeacher): AdminTeacher {
+    return {
+      ...teacher,
+      joiningDate: teacher.joiningDate || teacher.dateOfJoining || '',
+      experienceYears: teacher.experienceYears ?? teacher.experience ?? 0
+    };
   }
 
   getTeachers(studentId: number): Observable<TeacherContact[]> {
