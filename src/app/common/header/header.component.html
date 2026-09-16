@@ -9,6 +9,17 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
       <span class="notification-dot"></span>
     </a>
-    <a class="avatar" [routerLink]="isAuthenticated() ? '/profile' : '/login'" [attr.aria-label]="isAuthenticated() ? 'User profile' : 'Sign in'">{{ isAuthenticated() ? 'JD' : '' }}</a>
+    @if (isAuthenticated()) {
+      <div class="profile-menu">
+        <button class="avatar" type="button" aria-label="Open profile menu" [attr.aria-expanded]="isProfileMenuOpen()" (click)="toggleProfileMenu()">JD</button>
+        @if (isProfileMenuOpen()) {
+          <div class="profile-menu-panel">
+            <button type="button" (click)="logout()">Logout</button>
+          </div>
+        }
+      </div>
+    } @else {
+      <a class="avatar" routerLink="/login" aria-label="Sign in"></a>
+    }
   </div>
 </header>
