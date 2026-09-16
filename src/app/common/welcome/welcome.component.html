@@ -1,8 +1,8 @@
 <section class="welcome-panel">
   <div class="welcome-copy">
-    <p class="eyebrow">Good morning, Jordan</p>
+    <div class="welcome-school"><img [src]="school().welcomeLogo || defaultLogo" [alt]="school().name + ' logo'" (error)="useDefaultLogo($event)"><p class="eyebrow">{{ school().name }}</p></div>
     <h1>Make today <em>count.</em></h1>
-    <p class="welcome-text">Everything you need to keep your school day moving is right here.</p>
+    <p class="welcome-text">{{ welcomeMessage }}</p>
   </div>
   <div class="campus-illustration" aria-hidden="true">
     <span class="sun"></span><span class="hill hill-back"></span><span class="hill hill-front"></span>
