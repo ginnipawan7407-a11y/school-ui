@@ -13,7 +13,21 @@
       @if (activeTab === 'add') {
         <form class="admin-people-form" (submit)="$event.preventDefault(); save()">
           @for (field of fields; track field) {
-            <label>{{ labelFor(field) }}<input [type]="field === 'email' ? 'email' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required></label>
+            <label>{{ labelFor(field) }}
+              @if (field === 'className') {
+                <select [value]="form[field] ?? ''" (change)="updateField(field, $event)" required>
+                  <option value="" disabled>Select a class</option>
+                  @for (className of classOptions; track className) { <option [value]="className">{{ className }}</option> }
+                </select>
+              } @else if (field === 'section') {
+                <select [value]="form[field] ?? ''" (change)="updateField(field, $event)" required>
+                  <option value="" disabled>Select a section</option>
+                  @for (section of sectionOptions; track section) { <option [value]="section">Section {{ section }}</option> }
+                </select>
+              } @else {
+                <input [type]="field === 'email' ? 'email' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required>
+              }
+            </label>
           }
           <button class="save-attendance" type="submit">Add student</button>
         </form>

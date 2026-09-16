@@ -9,6 +9,8 @@ import { RouterLink } from '@angular/router';
 })
 export class AdminStudentsComponent {
   protected readonly fields = ['name', 'rollNumber', 'admissionNumber', 'address', 'fatherName', 'motherName', 'parentMobile', 'className', 'section', 'email'];
+  protected readonly classOptions = ['Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+  protected readonly sectionOptions = ['A', 'B', 'C'];
   protected readonly form: Record<string, string> = {};
   protected activeTab: 'add' | 'manage' = 'add';
   protected message = '';
