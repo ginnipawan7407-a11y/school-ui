@@ -1,5 +1,5 @@
 <main class="dashboard student-page">
-  <a class="back-link" routerLink="/">&#8592; Back to workspace</a>
+  <a class="back-link" routerLink="/" queryParamsHandling="preserve">&#8592; Back to workspace</a>
   <section class="student-page-heading"><p class="eyebrow">Student workspace</p><h1>My leave</h1><p>Apply for leave and track your submitted applications.</p></section>
   <div class="leave-tabs student-tabs" role="tablist" aria-label="My leave sections"><button type="button" role="tab" [class.active]="tab() === 'apply'" (click)="setTab('apply')">Apply leave</button><button type="button" role="tab" [class.active]="tab() === 'history'" (click)="setTab('history')">My leave history <span>{{ applications().length }}</span></button></div>
   @if (tab() === 'apply') {
