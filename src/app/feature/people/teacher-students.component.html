@@ -24,20 +24,27 @@
   </section>
 
   @if (students().length) {
-    <section class="student-directory-grid" aria-label="Students in selected class and section">
-      @for (student of students(); track student.id) {
-        <article class="student-detail-card">
-          <div class="student-card-heading"><span class="directory-avatar">{{ student.name.charAt(0) }}</span><div><h2>{{ student.name }}</h2><small>{{ student.rollNumber }} · {{ student.gender }}</small></div></div>
-          <div class="student-card-details">
-            <div><span>Class</span><strong>{{ student.className }} / {{ student.section }}</strong></div>
-            <div><span>Parent / guardian</span><strong>{{ student.parentName }}</strong><small>{{ student.parentRelation }}</small></div>
-            <div><span>Phone</span><a [href]="'tel:' + student.parentPhone">{{ student.parentPhone }}</a></div>
-          </div>
-        </article>
-      }
-    </section>
+  <section class="student-directory-grid" aria-label="Students in selected class and section">
+    @for (student of students(); track student.id) {
+    <article class="student-detail-card">
+      <div class="student-card-heading"><span class="directory-avatar">{{ student.name.charAt(0) }}</span>
+        <div>
+          <h2>{{ student.name }}</h2><small>{{ student.rollNumber }} · {{ student.gender }}</small>
+        </div>
+      </div>
+      <div class="student-card-details">
+        <div><span>Class</span><strong>{{ student.className }} / {{ student.section }}</strong></div>
+        <div><span>Parent / guardian</span><strong>{{ student.parentName }}</strong><small>{{ student.parentRelation
+            }}</small></div>
+        <div><span>Phone</span><a [href]="'tel:' + student.parentPhone">{{ student.parentPhone }}</a></div>
+      </div>
+    </article>
+    }
+  </section>
   } @else {
-    <section class="student-directory-empty"><p>No students found for {{ selectedClass() }} / Section {{ selectedSection() }}.</p></section>
+  <section class="student-directory-empty">
+    <p>No students found for {{ selectedClass() }} / Section {{ selectedSection() }}.</p>
+  </section>
   }
 </main>
 <footer><span>Oakridge School</span><span>Learning together since 1987</span></footer>

@@ -11,6 +11,12 @@ import { StudentClassmatesComponent } from './feature/people/student-classmates.
 import { StudentTeachersComponent } from './feature/people/student-teachers.component';
 import { StudentHomeworkComponent } from './feature/homework/student-homework.component';
 import { FeaturePageComponent } from './feature/main/feature-page.component';
+import { TeacherAnnouncementsComponent } from './feature/announcements/teacher-announcements.component';
+import { TeacherExamResultsComponent } from './feature/exams/teacher-exam-results.component';
+import { TeacherEventsComponent } from './feature/events/teacher-events.component';
+import { StudentAnnouncementsComponent } from './feature/announcements/student-announcements.component';
+import { StudentEventsComponent } from './feature/events/student-events.component';
+import { StudentResultComponent } from './feature/exams/student-result.component';
 
 export const routes: Routes = [
 	{ path: '', component: DashboardPageComponent },
@@ -18,7 +24,13 @@ export const routes: Routes = [
 	{ path: 'workspace/homework', component: TeacherHomeworkComponent },
 	{ path: 'workspace/leave-management', component: TeacherLeaveComponent },
 	{ path: 'workspace/student-details', component: TeacherStudentsComponent },
+	{ path: 'workspace/announcements', component: TeacherAnnouncementsComponent },
+	{ path: 'workspace/events', component: TeacherEventsComponent },
+	{ path: 'workspace/exam-result', component: TeacherExamResultsComponent },
 	{ path: 'student/attendance', component: StudentAttendanceComponent },
+	{ path: 'student/announcements', component: StudentAnnouncementsComponent },
+	{ path: 'student/events', component: StudentEventsComponent },
+	{ path: 'student/result', component: StudentResultComponent },
 	{ path: 'student/leave', component: StudentLeaveComponent },
 	{ path: 'student/classmates', component: StudentClassmatesComponent },
 	{ path: 'student/teacher', component: StudentTeachersComponent },

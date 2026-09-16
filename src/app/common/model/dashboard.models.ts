@@ -20,6 +20,7 @@ export const FALLBACK_DASHBOARD_DATA: DashboardData = {
       { id: 'leave-management', label: 'Leave management', detail: 'Request and track leave', icon: 'leave', tone: 'coral', roles: ['Teacher'] },
       { id: 'homework', label: 'Homework & classwork', detail: 'Share work with your class', icon: 'book', tone: 'gold', roles: ['Teacher', 'Student'] },
       { id: 'announcements', label: 'Announcements', detail: 'Keep families informed', icon: 'announce', tone: 'blue', roles: ['Teacher', 'Student'] },
+      { id: 'events', label: 'Events', detail: 'Share school event notices', icon: 'event', tone: 'violet', roles: ['Teacher'] },
       { id: 'exam-result', label: 'Exam result', detail: 'Publish student results', icon: 'result', tone: 'violet', roles: ['Teacher'] },
       { id: 'student-details', label: 'Student details', detail: 'View your class directory', icon: 'users', tone: 'orange', roles: ['Teacher'] }
     ],

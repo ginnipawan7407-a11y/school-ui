@@ -18,4 +18,14 @@ export class WorkspaceComponent {
   protected selectRole(role: Role): void {
     this.roleChange.emit(role);
   }
+
+  protected routeFor(item: MenuItem, role: Role): string[] {
+    if (role === 'Teacher' && item.id === 'announcements') return ['/workspace/announcements'];
+    if (role === 'Teacher' && item.id === 'events') return ['/workspace/events'];
+    if (role === 'Teacher' && item.id === 'exam-result') return ['/workspace/exam-result'];
+    if (role === 'Student' && item.id === 'announcements') return ['/student/announcements'];
+    if (role === 'Student' && item.id === 'events') return ['/student/events'];
+    if (role === 'Student' && item.id === 'result') return ['/student/result'];
+    return role === 'Student' ? ['/student', item.id] : ['/workspace', item.id];
+  }
 }
