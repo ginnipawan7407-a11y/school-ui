@@ -16,6 +16,7 @@ export class AdminTeachersComponent {
   protected activeTab: 'add' | 'manage' = 'add';
   protected readonly teachers = signal<AdminTeacher[]>([]);
   protected readonly loadingTeachers = signal(false);
+  protected readonly loadingTeacher = signal(false);
   protected editingTeacherId: number | null = null;
   protected message = '';
   protected error = '';
@@ -86,22 +87,32 @@ export class AdminTeachersComponent {
   }
 
   protected editTeacher(teacher: AdminTeacher): void {
-    this.editingTeacherId = teacher.id;
-    Object.assign(this.form, {
-      name: teacher.name,
-      gender: teacher.gender ?? '',
-      username: teacher.username,
-      empId: teacher.employeeId,
-      email: teacher.email,
-      mobile: teacher.phone,
-      address: teacher.address,
-      specialization: teacher.specialization,
-      qualification: teacher.qualification,
-      experience: String(teacher.experienceYears ?? teacher.experience ?? 0),
-      joiningDate: (teacher.joiningDate || teacher.dateOfJoining || '').slice(0, 10)
-    });
     this.activeTab = 'add';
+    this.loadingTeacher.set(true);
     this.message = '';
     this.error = '';
+    this.peopleService.getAdminTeacher(teacher.id).subscribe({
+      next: details => {
+        this.editingTeacherId = details.id;
+        Object.assign(this.form, {
+          name: details.name,
+          gender: details.gender ?? '',
+          username: details.username,
+          empId: details.employeeId,
+          email: details.email,
+          mobile: details.phone,
+          address: details.address,
+          specialization: details.specialization,
+          qualification: details.qualification,
+          experience: String(details.experienceYears ?? details.experience ?? 0),
+          joiningDate: (details.joiningDate || details.dateOfJoining || '').slice(0, 10)
+        });
+        this.loadingTeacher.set(false);
+      },
+      error: () => {
+        this.loadingTeacher.set(false);
+        this.error = 'Unable to load teacher details.';
+      }
+    });
   }
 }

@@ -11,12 +11,19 @@
         <button type="button" role="tab" [attr.aria-selected]="activeTab === 'manage'" [class.active]="activeTab === 'manage'" (click)="showManage()">Manage</button>
       </div>
       @if (activeTab === 'add') {
-        <form class="admin-people-form" (submit)="$event.preventDefault(); save()">
-          @for (field of fields; track field) {
-            <label>{{ field === 'joiningDate' ? 'Joining date' : field === 'empId' ? 'Employee ID' : field === 'experience' ? 'Experience years' : field }}<input [type]="field === 'joiningDate' ? 'date' : field === 'email' ? 'email' : field === 'experience' ? 'number' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required></label>
-          }
-          <button class="save-attendance" type="submit">{{ editingTeacherId === null ? 'Add teacher' : 'Update teacher' }}</button>
-        </form>
+        @if (loadingTeacher()) {
+          <div class="admin-manage-placeholder" role="status">Loading teacher details...</div>
+        } @else {
+          <form class="admin-people-form" (submit)="$event.preventDefault(); save()">
+            @if (editingTeacherId !== null) {
+              <label>ID<input type="number" [value]="editingTeacherId" readonly></label>
+            }
+            @for (field of fields; track field) {
+              <label>{{ field === 'joiningDate' ? 'Joining date' : field === 'empId' ? 'Employee ID' : field === 'experience' ? 'Experience years' : field }}<input [type]="field === 'joiningDate' ? 'date' : field === 'email' ? 'email' : field === 'experience' ? 'number' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required></label>
+            }
+            <button class="save-attendance" type="submit">{{ editingTeacherId === null ? 'Add teacher' : 'Update teacher' }}</button>
+          </form>
+        }
       } @else {
         @if (loadingTeachers()) {
           <div class="admin-manage-placeholder" role="status">Loading teachers...</div>
