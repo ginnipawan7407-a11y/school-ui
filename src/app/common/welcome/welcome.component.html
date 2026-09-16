@@ -4,9 +4,5 @@
     <h1>Make today <em>count.</em></h1>
     <p class="welcome-text">{{ welcomeMessage }}</p>
   </div>
-  <div class="campus-illustration" aria-hidden="true">
-    <span class="sun"></span><span class="hill hill-back"></span><span class="hill hill-front"></span>
-    <span class="building"><i></i><i></i><i></i><b></b></span>
-    <span class="tree tree-one"></span><span class="tree tree-two"></span>
-  </div>
+  <img class="school-welcom-background" [src]="school().welcomeBackground || defaultWelcomeBackground" alt="" aria-hidden="true" (error)="useDefaultWelcomeBackground($event)">
 </section>
