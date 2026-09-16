@@ -2,7 +2,14 @@
   <a class="back-link" routerLink="/" queryParamsHandling="preserve">&#8592; Back to workspace</a>
   <section class="student-page-heading"><p class="eyebrow">Student workspace</p><h1>My work</h1><p>Review your classwork and homework with the attached resources.</p></section>
   <section class="homework-week" aria-label="Select a homework date">
-    <div class="homework-week-heading"><div><p class="eyebrow">This week</p><h2>Choose a day</h2></div><span>{{ selectedDate() }}</span></div>
+    <div class="homework-week-heading">
+      <div class="homework-week-title"><p class="eyebrow">{{ weekHeading() }}</p><h2>Choose a day</h2></div>
+      <div class="week-nav-controls" aria-label="Homework week navigation">
+        <button type="button" class="week-nav-button" (click)="previousWeek()" aria-label="View previous week">&#8592; Prev</button>
+        <span>{{ weekRange() }}</span>
+        <button type="button" class="week-nav-button" (click)="nextWeek()" aria-label="View next week">Next &#8594;</button>
+      </div>
+    </div>
     <div class="homework-week-grid">
       @for (day of weekDays(); track day.date) {
         <button type="button" [class.active]="selectedDate() === day.date" [attr.aria-pressed]="selectedDate() === day.date" (click)="selectDate(day.date)"><small>{{ day.label }}</small><strong>{{ day.dayNumber }}</strong></button>
