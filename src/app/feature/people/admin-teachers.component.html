@@ -1,0 +1,31 @@
+<main class="dashboard feature-page admin-people-page">
+  <a class="back-link" routerLink="/" [queryParams]="{ role: 'Admin' }">&#8592; Back to workspace</a>
+  <section class="feature-panel admin-people-panel">
+    <p class="eyebrow">Oakridge workspace</p>
+    <h1>Manage Teachers</h1>
+    <p>Add faculty records or manage existing teachers in the school directory.</p>
+    <section class="admin-people-tools" aria-labelledby="admin-teachers-title">
+      <h2 id="admin-teachers-title">Teacher records</h2>
+      <div class="admin-data-tabs" role="tablist" aria-label="Teacher management actions">
+        <button type="button" role="tab" [attr.aria-selected]="activeTab === 'add'" [class.active]="activeTab === 'add'" (click)="activeTab = 'add'">Add new</button>
+        <button type="button" role="tab" [attr.aria-selected]="activeTab === 'manage'" [class.active]="activeTab === 'manage'" (click)="activeTab = 'manage'">Manage</button>
+      </div>
+      @if (activeTab === 'add') {
+        <form class="admin-people-form" (submit)="$event.preventDefault(); save()">
+          @for (field of fields; track field) {
+            <label>{{ field === 'joiningDate' ? 'Joining date' : field }}<input [type]="field === 'joiningDate' ? 'date' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required></label>
+          }
+          <button class="save-attendance" type="submit">Add teacher</button>
+        </form>
+      } @else {
+        <div class="admin-manage-placeholder" role="status">
+          <strong>Teacher management</strong>
+          <span>Existing records will appear here when the management API is connected.</span>
+        </div>
+      }
+      @if (message) { <p class="admin-data-message">{{ message }}</p> }
+      @if (error) { <p class="admin-data-error" role="alert">{{ error }}</p> }
+    </section>
+  </section>
+</main>
+<footer><span>Oakridge School</span><span>Learning together since 1987</span></footer>
