@@ -18,6 +18,8 @@ import { ProfileService } from '../profile/profile.service';
 import { AdminDataService, AdminDataType } from './admin-data.service';
 
 interface FeatureMetric { label: string; value: string | number; }
+type AdminPeopleTab = 'add' | 'manage';
+type AdminPeopleType = 'teachers' | 'students';
 
 @Component({
   selector: 'app-feature-page',
@@ -39,12 +41,25 @@ export class FeaturePageComponent {
   private readonly profileService = inject(ProfileService);
   private readonly adminDataService = inject(AdminDataService);
   protected readonly featureId = this.route.snapshot.paramMap.get('id') ?? this.route.snapshot.routeConfig?.path ?? '';
+  protected get isAdminPeoplePage(): boolean {
+    return (this.featureId === 'teachers' || this.featureId === 'students') && this.role === 'Admin';
+  }
+  protected get isTeacherPage(): boolean {
+    return this.featureId === 'teachers';
+  }
 
   protected readonly item: MenuItem = this.findItem(this.featureId);
   protected readonly role = this.getRole(this.route.snapshot.queryParamMap.get('role'));
   protected readonly metrics = toSignal(this.getMetrics(this.featureId), { initialValue: [] as FeatureMetric[] });
   protected readonly adminDataTypes: AdminDataType[] = ['Student', 'Teacher', 'Class & Section'];
   protected activeDataTab: 'import' | 'sample' | 'records' = 'import';
+  protected activePeopleTab: AdminPeopleTab = 'add';
+  protected readonly teacherFields = ['empId', 'email', 'mobile', 'address', 'specialization', 'qualification', 'experience', 'joiningDate'];
+  protected readonly studentFields = ['name', 'rollNumber', 'admissionNumber', 'address', 'fatherName', 'motherName', 'parentMobile', 'className', 'section', 'email'];
+  protected readonly teacherForm: Record<string, string> = {};
+  protected readonly studentForm: Record<string, string> = {};
+  protected peopleMessage = '';
+  protected peopleError = '';
   protected selectedImportType: AdminDataType = 'Student';
   protected selectedSampleType: AdminDataType = 'Student';
   protected selectedExportType: AdminDataType = 'Student';
@@ -63,6 +78,30 @@ export class FeaturePageComponent {
     this.activeDataTab = tab;
     this.dataMessage = '';
     this.dataError = '';
+  }
+
+  protected selectPeopleTab(tab: AdminPeopleTab): void {
+    this.activePeopleTab = tab;
+    this.peopleMessage = '';
+    this.peopleError = '';
+  }
+
+  protected updatePeopleField(type: AdminPeopleType, field: string, event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    (type === 'teachers' ? this.teacherForm : this.studentForm)[field] = value;
+  }
+
+  protected savePeople(type: AdminPeopleType): void {
+    const form = type === 'teachers' ? this.teacherForm : this.studentForm;
+    const fields = type === 'teachers' ? this.teacherFields : this.studentFields;
+    if (fields.some(field => !form[field]?.trim())) {
+      this.peopleError = `Complete all ${type === 'teachers' ? 'teacher' : 'student'} fields before saving.`;
+      this.peopleMessage = '';
+      return;
+    }
+
+    this.peopleMessage = `${type === 'teachers' ? 'Teacher' : 'Student'} details are ready to be saved.`;
+    this.peopleError = '';
   }
 
   protected importSelectedFile(): void {
