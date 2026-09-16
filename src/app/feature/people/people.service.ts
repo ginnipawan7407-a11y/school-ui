@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 
 export interface PeopleSummary { students: number; teachers: number; classmates: number; }
 export interface StudentDirectoryEntry {
@@ -13,6 +13,27 @@ export interface StudentDirectoryEntry {
   parentName: string;
   parentPhone: string;
   parentRelation: string;
+}
+export interface AdminStudent {
+  id: number;
+  name: string;
+  gender: string;
+  email: string;
+  admissionNumber: number;
+  rollNumber: number;
+  classId: number;
+  sectionName: string;
+  fatherName: string;
+  motherName: string;
+  dateOfBirth: string;
+  address: string;
+  parentPhone: string;
+}
+interface StudentResponse {
+  status: string;
+  code: number;
+  message: string;
+  data: AdminStudent[];
 }
 export interface Classmate { id: number; name: string; rollNumber: string; photoUrl: string; }
 export interface TeacherContact { id: number; name: string; subject: string; phone: string; email: string; isClassTeacher: boolean; photoUrl: string; }
@@ -46,6 +67,11 @@ export class PeopleService {
         student.className === className && student.section === section
       ).map(student => ({ ...student }))))
     );
+  }
+
+  getStudentsByClassAndSection(classId: number, section: string): Observable<AdminStudent[]> {
+    return this.http.get<StudentResponse>(`/rest/user-service/api/v1/students/class/${classId}/section/${encodeURIComponent(section)}`)
+      .pipe(map(response => response.data));
   }
 
   getClassmates(studentId: number): Observable<Classmate[]> {
