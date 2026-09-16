@@ -7,7 +7,7 @@
     <section class="admin-people-tools" aria-labelledby="admin-students-title">
       <h2 id="admin-students-title">Student records</h2>
       <div class="admin-data-tabs" role="tablist" aria-label="Student management actions">
-        <button type="button" role="tab" [attr.aria-selected]="activeTab === 'add'" [class.active]="activeTab === 'add'" (click)="activeTab = 'add'">Add new</button>
+        <button type="button" role="tab" [attr.aria-selected]="activeTab === 'add'" [class.active]="activeTab === 'add'" (click)="activeTab = 'add'">{{ editingStudentId === null ? 'Add new' : 'Update' }}</button>
         <button type="button" role="tab" [attr.aria-selected]="activeTab === 'manage'" [class.active]="activeTab === 'manage'" (click)="showManage()">Manage</button>
       </div>
       @if (activeTab === 'add') {
