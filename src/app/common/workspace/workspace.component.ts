@@ -13,7 +13,9 @@ export class WorkspaceComponent {
   @Input({ required: true }) menus!: Record<Role, MenuItem[]>;
   @Output() roleChange = new EventEmitter<Role>();
 
-  protected readonly roles: Role[] = ['Teacher', 'Student', 'Admin'];
+  protected get roles(): Role[] {
+    return [this.role];
+  }
 
   protected selectRole(role: Role): void {
     this.roleChange.emit(role);

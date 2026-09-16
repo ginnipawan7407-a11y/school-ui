@@ -6,6 +6,7 @@ import { DashboardService } from './dashboard.service';
 import { FALLBACK_DASHBOARD_DATA, Role } from '../../common/model/dashboard.models';
 import { WelcomeComponent } from '../../common/welcome/welcome.component';
 import { WorkspaceComponent } from '../../common/workspace/workspace.component';
+import { AuthSessionService } from '../../core/auth/auth-session.service';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -14,9 +15,12 @@ import { WorkspaceComponent } from '../../common/workspace/workspace.component';
 })
 export class DashboardPageComponent {
   private readonly dashboardService = inject(DashboardService);
+  private readonly authSession = inject(AuthSessionService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  protected readonly role = signal<Role>(this.getRole(this.route.snapshot.queryParamMap.get('role')));
+  protected readonly role = signal<Role>(
+    this.authSession.role ?? this.getRole(this.route.snapshot.queryParamMap.get('role'))
+  );
   protected readonly dashboard = toSignal(this.dashboardService.getDashboardData(), {
     initialValue: FALLBACK_DASHBOARD_DATA
   });

@@ -35,7 +35,7 @@ export class AuthSessionService {
   }
 
   private toRole(value: string | null): Role | null {
-    switch (value?.toLowerCase()) {
+    switch (value?.toLowerCase().replace(/^role_/, '')) {
       case 'teacher': return 'Teacher';
       case 'student': return 'Student';
       case 'admin': return 'Admin';
