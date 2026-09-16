@@ -11,11 +11,18 @@ export interface LoginRequest {
 }
 
 interface LoginResponse {
-  token?: string;
-  jwt?: string;
-  jwtToken?: string;
-  accessToken?: string;
-  role?: string;
+  status: string;
+  code: number;
+  message: string;
+  data: {
+    id: number;
+    username: string;
+    token: string;
+    refreshToken: string | null;
+    roles: string[];
+    active: boolean;
+  };
+  timestamp: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -26,8 +33,8 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<void> {
     return this.http.post<LoginResponse>('/api/auth/login', credentials).pipe(
       map(response => {
-        const token = response.token ?? response.jwt ?? response.jwtToken ?? response.accessToken;
-        const role = this.toRole(response.role);
+        const token = response.data.token;
+        const role = this.toRole(response.data.roles[0]);
         if (!token || !role) {
           throw new Error('Login response did not include a valid token and role.');
         }
@@ -43,7 +50,7 @@ export class AuthService {
   }
 
   private toRole(value: string | undefined): Role | null {
-    switch (value?.toLowerCase()) {
+    switch (value?.toLowerCase().replace(/^role_/, '')) {
       case 'teacher': return 'Teacher';
       case 'student': return 'Student';
       case 'admin': return 'Admin';
