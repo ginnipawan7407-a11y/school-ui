@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 import { Role } from '../../common/model/dashboard.models';
 
@@ -7,8 +7,11 @@ const ROLE_KEY = 'school_auth_role';
 
 @Injectable({ providedIn: 'root' })
 export class AuthSessionService {
+  private readonly tokenState = signal<string | null>(sessionStorage.getItem(TOKEN_KEY));
+  readonly isAuthenticatedState = this.tokenState.asReadonly();
+
   get token(): string | null {
-    return sessionStorage.getItem(TOKEN_KEY);
+    return this.tokenState();
   }
 
   get role(): Role | null {
@@ -22,11 +25,13 @@ export class AuthSessionService {
   setSession(token: string, role: Role): void {
     sessionStorage.setItem(TOKEN_KEY, token);
     sessionStorage.setItem(ROLE_KEY, role);
+    this.tokenState.set(token);
   }
 
   clearSession(): void {
     sessionStorage.removeItem(TOKEN_KEY);
     sessionStorage.removeItem(ROLE_KEY);
+    this.tokenState.set(null);
   }
 
   private toRole(value: string | null): Role | null {
