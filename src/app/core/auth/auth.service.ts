@@ -11,6 +11,7 @@ export interface LoginRequest {
 }
 
 interface LoginResponse {
+  data: LoginResponse;
   token?: string;
   jwt?: string;
   jwtToken?: string;
@@ -24,8 +25,9 @@ export class AuthService {
   private readonly session = inject(AuthSessionService);
 
   login(credentials: LoginRequest): Observable<void> {
-    return this.http.post<LoginResponse>('/api/auth/login', credentials).pipe(
-      map(response => {
+    return this.http.post<LoginResponse>('http://192.168.1.10:8000/user-service/api/v1/auth/login', credentials).pipe(
+      map(res => {
+        var response = res.data as LoginResponse;
         const token = response.token ?? response.jwt ?? response.jwtToken ?? response.accessToken;
         const role = this.toRole(response.role);
         if (!token || !role) {
