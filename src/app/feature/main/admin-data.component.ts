@@ -12,7 +12,7 @@ import { AdminDataService, AdminDataType } from './admin-data.service';
 export class AdminDataComponent {
   private readonly adminDataService = inject(AdminDataService);
 
-  protected readonly adminDataTypes: AdminDataType[] = ['Student', 'Teacher', 'Class & Section'];
+  protected readonly adminDataTypes: AdminDataType[] = ['Student', 'Teacher', 'Section'];
   protected activeDataTab: 'import' | 'sample' | 'records' = 'import';
   protected selectedImportType: AdminDataType = 'Student';
   protected selectedSampleType: AdminDataType = 'Student';
@@ -55,14 +55,12 @@ export class AdminDataComponent {
   }
 
   protected downloadSample(): void {
-    const headers: Record<AdminDataType, string> = {
-      Student: 'name,username,className,section,email,mobile',
-      Teacher: 'name,username,subject,email,mobile',
-      'Class & Section': 'className,section'
-    };
-    this.downloadCsv(`${this.selectedSampleType.toLowerCase().replaceAll(' & ', '-')}-sample.csv`, `${headers[this.selectedSampleType]}\n`);
-    this.dataMessage = `${this.selectedSampleType} sample template downloaded.`;
-    this.dataError = '';
+    this.adminDataService.exportSample(this.selectedSampleType).subscribe({
+      next: file => this.downloadBlob(`${this.selectedSampleType.toLowerCase().replaceAll(' & ', '-')}-sample.csv`, file),
+      error: () => {
+        this.dataError = 'The sample template could not be downloaded. Please try again.';
+      }
+    });
   }
 
   protected exportRecords(): void {
