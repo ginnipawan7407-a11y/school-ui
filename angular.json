@@ -60,7 +60,8 @@
               "buildTarget": "school-dashboard:build:production"
             },
             "development": {
-              "buildTarget": "school-dashboard:build:development"
+              "buildTarget": "school-dashboard:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
