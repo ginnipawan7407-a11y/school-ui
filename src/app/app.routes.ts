@@ -22,6 +22,8 @@ import { LoginComponent } from './feature/auth/login.component';
 import { AdminTeachersComponent } from './feature/people/admin-teachers.component';
 import { AdminStudentsComponent } from './feature/people/admin-students.component';
 import { AdminFeesComponent } from './feature/fees/admin-fees.component';
+import { AdminDataComponent } from './feature/main/admin-data.component';
+import { adminGuard } from './core/auth/admin.guard';
 
 export const routes: Routes = [
 	{ path: 'login', component: LoginComponent },
@@ -36,6 +38,7 @@ export const routes: Routes = [
 	{ path: 'workspace/teachers', component: AdminTeachersComponent, canActivate: [authGuard] },
 	{ path: 'workspace/students', component: AdminStudentsComponent, canActivate: [authGuard] },
 	{ path: 'workspace/fees', component: AdminFeesComponent, canActivate: [authGuard] },
+	{ path: 'workspace/import-data', component: AdminDataComponent, canActivate: [authGuard, adminGuard] },
 	{ path: 'student/attendance', component: StudentAttendanceComponent, canActivate: [authGuard] },
 	{ path: 'student/announcements', component: StudentAnnouncementsComponent, canActivate: [authGuard] },
 	{ path: 'student/events', component: StudentEventsComponent, canActivate: [authGuard] },
