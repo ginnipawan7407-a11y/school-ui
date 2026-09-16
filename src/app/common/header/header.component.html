@@ -11,9 +11,16 @@
     </a>
     @if (isAuthenticated()) {
       <div class="profile-menu">
-        <button class="avatar" type="button" aria-label="Open profile menu" [attr.aria-expanded]="isProfileMenuOpen()" (click)="toggleProfileMenu()">JD</button>
+        <button class="avatar" type="button" aria-label="Open profile menu" [attr.aria-expanded]="isProfileMenuOpen()" (click)="toggleProfileMenu()">
+          @if (profile()?.photoUrl) {
+            <img width="35" height="35" [src]="profile()?.photoUrl" [alt]="profile()?.name ?? 'Profile photo'">
+          } @else {
+            {{ initials() }}
+          }
+        </button>
         @if (isProfileMenuOpen()) {
           <div class="profile-menu-panel">
+            <a routerLink="/profile" (click)="isProfileMenuOpen.set(false)">My profile</a>
             <button type="button" (click)="logout()">Logout</button>
           </div>
         }
