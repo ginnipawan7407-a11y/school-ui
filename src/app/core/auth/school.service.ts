@@ -7,17 +7,20 @@ export interface School {
   name: string;
   logoUrl?: string;
   welcomeLogo?: string;
+  welcomeBackground?: string;
   shortName: string;
 }
 
 const DEFAULT_LOGO = '/image/default-logo.svg';
+const DEFAULT_WELCOME_BACKGROUND = '/image/school-welcom-background.svg';
 const DEFAULT_WELCOME_MESSAGE = 'Welcom to the school management application, Please contact +91-8130579771 to get onBoarded as a school.';
 const DEFAULT_SCHOOL: School = {
   id: 'default',
   name: 'School Management Application',
   shortName: 'School Management',
   logoUrl: DEFAULT_LOGO,
-  welcomeLogo: DEFAULT_LOGO
+  welcomeLogo: DEFAULT_LOGO,
+  welcomeBackground: DEFAULT_WELCOME_BACKGROUND
 };
 
 const DUMMY_SCHOOLS: School[] = [
@@ -26,21 +29,24 @@ const DUMMY_SCHOOLS: School[] = [
     name: 'Oakridge School',
     shortName: 'Oakridge',
     logoUrl: '/school-logos/oakridge.svg',
-    welcomeLogo: '/school-logos/oakridge.svg'
+    welcomeLogo: '/school-logos/oakridge.svg',
+    welcomeBackground: DEFAULT_WELCOME_BACKGROUND
   },
   {
     id: 'greenwood',
     name: 'Greenwood Academy',
     shortName: 'Greenwood',
     logoUrl: '/school-logos/greenwood.svg',
-    welcomeLogo: '/school-logos/greenwood.svg'
+    welcomeLogo: '/school-logos/greenwood.svg',
+    welcomeBackground: DEFAULT_WELCOME_BACKGROUND
   },
   {
     id: 'lakeside',
     name: 'Lakeside Public School',
     shortName: 'Lakeside',
     logoUrl: '/school-logos/lakeside.svg',
-    welcomeLogo: '/school-logos/lakeside.svg'
+    welcomeLogo: '/school-logos/lakeside.svg',
+    welcomeBackground: DEFAULT_WELCOME_BACKGROUND
   }
 ];
 
@@ -71,9 +77,10 @@ export class SchoolService {
       ...school,
       logoUrl: school.logoUrl?.trim() || branding.logoUrl || DEFAULT_LOGO,
       welcomeLogo: school.welcomeLogo?.trim() || branding.welcomeLogo || DEFAULT_LOGO,
+      welcomeBackground: school.welcomeBackground?.trim() || branding.welcomeBackground || DEFAULT_WELCOME_BACKGROUND,
       shortName: school.shortName?.trim() || branding.shortName
     };
   }
 }
 
-export { DEFAULT_LOGO, DEFAULT_WELCOME_MESSAGE };
+export { DEFAULT_LOGO, DEFAULT_WELCOME_BACKGROUND, DEFAULT_WELCOME_MESSAGE };
