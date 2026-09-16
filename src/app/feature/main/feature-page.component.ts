@@ -61,7 +61,12 @@ export class FeaturePageComponent {
         { label: 'Outstanding', value: data.outstanding }, { label: 'Paid', value: data.paid }, { label: 'Due date', value: data.dueDate }
       ]));
       case 'profile': return this.profileService.getProfile().pipe(map(data => [
-        { label: 'Name', value: data.name }, { label: 'Class', value: data.className }, { label: 'Email', value: data.email }
+        { label: 'Name', value: data.name },
+        { label: 'Username', value: data.username },
+        { label: 'Mobile', value: data.mobile },
+        { label: 'Email', value: data.email },
+        { label: 'Role', value: data.role },
+        { label: 'Status', value: data.active ? 'Active' : 'Inactive' }
       ]));
       case 'notifications': return this.notificationsService.getSummary().pipe(map(data => [
         { label: 'Unread', value: data.unread }, { label: 'Latest', value: data.latest }
