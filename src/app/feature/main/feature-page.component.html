@@ -1,0 +1,17 @@
+<main class="dashboard feature-page">
+  <a class="back-link" routerLink="/">&#8592; Back to workspace</a>
+  <section class="feature-panel">
+    <p class="eyebrow">Oakridge workspace</p>
+    <h1>{{ item.label }}</h1>
+    <p>{{ item.detail }}. This area is ready for the live {{ item.label.toLowerCase() }} API workflow.</p>
+    @if (metrics().length) {
+      <div class="feature-metrics">
+        @for (metric of metrics(); track metric.label) {
+          <div><strong>{{ metric.value }}</strong><small>{{ metric.label }}</small></div>
+        }
+      </div>
+    }
+    <div class="feature-status"><span></span> Showing the local preview until the API is connected.</div>
+  </section>
+</main>
+<footer><span>Oakridge School</span><span>Learning together since 1987</span></footer>
