@@ -45,6 +45,10 @@ export class AuthService {
     );
   }
 
+  setSchoolId(schoolId: string): void {
+    this.session.setSchoolId(schoolId);
+  }
+
   logout(): void {
     this.session.clearSession();
   }

@@ -4,6 +4,7 @@ import { Role } from '../../common/model/dashboard.models';
 
 const TOKEN_KEY = 'school_auth_token';
 const ROLE_KEY = 'school_auth_role';
+const SCHOOL_NAME_KEY = 'X-School-Name';
 
 @Injectable({ providedIn: 'root' })
 export class AuthSessionService {
@@ -18,6 +19,10 @@ export class AuthSessionService {
     return this.toRole(sessionStorage.getItem(ROLE_KEY));
   }
 
+  get schoolHeaderValue(): string | null {
+    return sessionStorage.getItem(SCHOOL_NAME_KEY);
+  }
+
   get isAuthenticated(): boolean {
     return Boolean(this.token);
   }
@@ -28,9 +33,14 @@ export class AuthSessionService {
     this.tokenState.set(token);
   }
 
+  setSchoolId(schoolId: string): void {
+    sessionStorage.setItem(SCHOOL_NAME_KEY, schoolId);
+  }
+
   clearSession(): void {
     sessionStorage.removeItem(TOKEN_KEY);
     sessionStorage.removeItem(ROLE_KEY);
+    sessionStorage.removeItem(SCHOOL_NAME_KEY);
     this.tokenState.set(null);
   }
 
