@@ -30,7 +30,7 @@ const DUMMY_SCHOOLS: School[] = [
     shortName: 'Bharti',
     logoUrl: '/school-logos/bpssv.png',
     welcomeLogo: '/school-logos/bpssv.png',
-    welcomeBackground: DEFAULT_WELCOME_BACKGROUND
+    welcomeBackground: '/school-logos/bpssv-welcome-background.jpg'
   },
   {
     id: 'greenwood',
@@ -56,7 +56,7 @@ export class SchoolService {
   private readonly schools = signal<School[]>(DUMMY_SCHOOLS);
 
   getSchools(): Observable<School[]> {
-    return this.http.get<Partial<School>[]>('/rest/user-service/api/v1/schools').pipe(
+    return this.http.get<Partial<School>[]>('/api/v1/schools').pipe(
       map(schools => schools.map(school => this.withBranding(school))),
       tap(schools => this.schools.set(schools)),
       catchError(() => of(DUMMY_SCHOOLS))
