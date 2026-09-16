@@ -1,7 +1,7 @@
 <header class="topbar">
-  <a class="brand" routerLink="/" aria-label="Oakridge school home">
-    <span class="crest" aria-hidden="true"><span>O</span></span>
-    <span class="brand-copy"><strong>Oakridge</strong><small>School portal</small></span>
+  <a class="brand" routerLink="/" [attr.aria-label]="school().name + ' home'">
+    <img class="school-logo" [src]="school().logoUrl || defaultLogo" [alt]="school().name + ' logo'" (error)="useDefaultLogo($event)">
+    <span class="brand-copy"><strong>{{ school().shortName }}</strong><small>School portal</small></span>
   </a>
   <div class="topbar-actions">
     <span class="date-label">{{ today }}</span>

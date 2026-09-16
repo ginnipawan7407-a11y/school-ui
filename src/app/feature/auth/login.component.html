@@ -11,6 +11,12 @@
           <option [value]="school.id">{{ school.name }}</option>
         }
       </select>
+      @if (selectedSchool()) {
+        <div class="school-preview">
+          <img [src]="selectedSchool()!.logoUrl" [alt]="selectedSchool()!.name + ' logo'">
+          <span>{{ selectedSchool()!.name }}</span>
+        </div>
+      }
       @if (schoolError()) {
         <p class="login-error" role="alert">{{ schoolError() }}</p>
       }

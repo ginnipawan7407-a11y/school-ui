@@ -9,7 +9,9 @@ const SCHOOL_NAME_KEY = 'X-School-Name';
 @Injectable({ providedIn: 'root' })
 export class AuthSessionService {
   private readonly tokenState = signal<string | null>(sessionStorage.getItem(TOKEN_KEY));
+  private readonly schoolIdState = signal<string | null>(sessionStorage.getItem(SCHOOL_NAME_KEY));
   readonly isAuthenticatedState = this.tokenState.asReadonly();
+  readonly selectedSchoolIdState = this.schoolIdState.asReadonly();
 
   get token(): string | null {
     return this.tokenState();
@@ -35,6 +37,7 @@ export class AuthSessionService {
 
   setSchoolId(schoolId: string): void {
     sessionStorage.setItem(SCHOOL_NAME_KEY, schoolId);
+    this.schoolIdState.set(schoolId);
   }
 
   clearSession(): void {
@@ -42,6 +45,7 @@ export class AuthSessionService {
     sessionStorage.removeItem(ROLE_KEY);
     sessionStorage.removeItem(SCHOOL_NAME_KEY);
     this.tokenState.set(null);
+    this.schoolIdState.set(null);
   }
 
   private toRole(value: string | null): Role | null {

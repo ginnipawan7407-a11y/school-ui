@@ -2,4 +2,4 @@
   <app-welcome />
   <app-workspace [role]="role()" [menus]="dashboard().menus" (roleChange)="selectRole($event)" />
 </main>
-<footer><span>Oakridge School</span><span>Learning together since 1987</span></footer>
+<footer><span>{{ school().name }}</span><span>Learning together since 1987</span></footer>

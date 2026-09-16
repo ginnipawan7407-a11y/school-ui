@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { AuthSessionService } from '../../core/auth/auth-session.service';
 import { ProfileService } from '../../feature/profile/profile.service';
+import { DEFAULT_LOGO, SchoolService } from '../../core/auth/school.service';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,7 @@ export class HeaderComponent {
   private readonly authSession = inject(AuthSessionService);
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
+  private readonly schoolService = inject(SchoolService);
   private readonly router = inject(Router);
   protected readonly isProfileMenuOpen = signal(false);
   protected readonly profile = toSignal(this.profileService.getProfile(), { initialValue: null });
@@ -22,6 +24,8 @@ export class HeaderComponent {
     weekday: 'long', month: 'long', day: 'numeric'
   }).format(new Date());
   protected readonly isAuthenticated = computed(() => this.authSession.isAuthenticatedState());
+  protected readonly school = computed(() => this.schoolService.getBranding(this.authSession.selectedSchoolIdState()));
+  protected readonly defaultLogo = DEFAULT_LOGO;
 
   protected toggleProfileMenu(): void {
     this.isProfileMenuOpen.update(isOpen => !isOpen);
@@ -31,6 +35,13 @@ export class HeaderComponent {
     this.authService.logout();
     this.isProfileMenuOpen.set(false);
     void this.router.navigateByUrl('/login');
+  }
+
+  protected useDefaultLogo(event: Event): void {
+    const image = event.target;
+    if (image instanceof HTMLImageElement && !image.src.endsWith(DEFAULT_LOGO)) {
+      image.src = DEFAULT_LOGO;
+    }
   }
 
   protected initials(): string {

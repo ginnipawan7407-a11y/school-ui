@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -20,6 +20,9 @@ export class LoginComponent {
   protected readonly password = signal('');
   protected readonly schools = signal<School[]>([]);
   protected readonly selectedSchoolId = signal('');
+  protected readonly selectedSchool = computed(() =>
+    this.schools().find(school => String(school.id) === this.selectedSchoolId())
+  );
   protected readonly isLoadingSchools = signal(true);
   protected readonly schoolError = signal('');
   protected readonly isSubmitting = signal(false);
