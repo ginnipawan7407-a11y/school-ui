@@ -42,6 +42,8 @@ export interface AdminTeacher {
   experienceYears: number;
   address: string;
   phone: string;
+  dateOfJoining?: string;
+  experience?: number;
 }
 interface StudentResponse {
   status: string;
@@ -96,7 +98,11 @@ export class PeopleService {
 
   getAdminTeachers(): Observable<AdminTeacher[]> {
     return this.http.get<TeacherResponse>('/rest/user-service/api/v1/teachers')
-      .pipe(map(response => response.data));
+      .pipe(map(response => response.data.map(teacher => ({
+        ...teacher,
+        joiningDate: teacher.joiningDate || teacher.dateOfJoining || '',
+        experienceYears: teacher.experienceYears ?? teacher.experience ?? 0
+      }))));
   }
 
   updateStudent(student: AdminStudent): Observable<void> {
