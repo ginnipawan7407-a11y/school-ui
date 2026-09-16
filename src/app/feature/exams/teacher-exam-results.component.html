@@ -1,5 +1,5 @@
 <main class="dashboard results-page">
-  <a class="back-link" routerLink="/">&#8592; Back to workspace</a>
+  <a class="back-link" routerLink="/" queryParamsHandling="preserve">&#8592; Back to workspace</a>
   <section class="results-heading"><p class="eyebrow">Teacher workspace</p><h1>Exam results</h1><p>Record marks, attach subject papers, and review a student's final result.</p></section>
 
   <div class="results-mode-switcher" role="tablist" aria-label="Exam result mode"><button type="button" role="tab" [class.active]="mode() === 'save'" (click)="switchMode('save')">Save / update result</button><button type="button" role="tab" [class.active]="mode() === 'view'" (click)="switchMode('view')">View result</button></div>

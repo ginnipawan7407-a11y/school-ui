@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { FALLBACK_DASHBOARD_DATA, MenuItem } from '../../common/model/dashboard.models';
+import { FALLBACK_DASHBOARD_DATA, MenuItem, Role } from '../../common/model/dashboard.models';
 import { AnnouncementsService } from '../announcements/announcements.service';
 import { AttendanceService } from '../attendance/attendance.service';
 import { EventsService } from '../events/events.service';
@@ -38,6 +38,7 @@ export class FeaturePageComponent {
   private readonly featureId = this.route.snapshot.paramMap.get('id') ?? this.route.snapshot.routeConfig?.path ?? '';
 
   protected readonly item: MenuItem = this.findItem(this.featureId);
+  protected readonly role = this.getRole(this.route.snapshot.queryParamMap.get('role'));
   protected readonly metrics = toSignal(this.getMetrics(this.featureId), { initialValue: [] as FeatureMetric[] });
 
   private getMetrics(id: string): Observable<FeatureMetric[]> {
@@ -83,5 +84,13 @@ export class FeaturePageComponent {
       tone: 'teal',
       roles: ['Teacher', 'Student', 'Admin']
     };
+  }
+
+  private getRole(value: string | null): Role {
+    switch (value?.toLowerCase()) {
+      case 'student': return 'Student';
+      case 'admin': return 'Admin';
+      default: return 'Teacher';
+    }
   }
 }
