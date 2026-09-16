@@ -10,9 +10,9 @@ import { AdminStudent, PeopleService } from './people.service';
 })
 export class TeacherStudentsComponent {
   private readonly peopleService = inject(PeopleService);
-  protected readonly classOptions = [6, 7, 8, 9, 10];
-  protected readonly sectionOptions = ['A', 'B', 'C'];
-  protected readonly selectedClass = signal(8);
+  protected readonly classOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  protected readonly sectionOptions = ['A', 'B', 'C', 'D', 'E'];
+  protected readonly selectedClass = signal(1);
   protected readonly selectedSection = signal('A');
   protected readonly students = signal<AdminStudent[]>([]);
 
