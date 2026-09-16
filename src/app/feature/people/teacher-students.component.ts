@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { PeopleService, StudentDirectoryEntry } from './people.service';
+import { AdminStudent, PeopleService } from './people.service';
 
 @Component({
   selector: 'app-teacher-students',
@@ -10,18 +10,18 @@ import { PeopleService, StudentDirectoryEntry } from './people.service';
 })
 export class TeacherStudentsComponent {
   private readonly peopleService = inject(PeopleService);
-  protected readonly classOptions = ['Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
+  protected readonly classOptions = [6, 7, 8, 9, 10];
   protected readonly sectionOptions = ['A', 'B', 'C'];
-  protected readonly selectedClass = signal('Class 8');
+  protected readonly selectedClass = signal(8);
   protected readonly selectedSection = signal('A');
-  protected readonly students = signal<StudentDirectoryEntry[]>([]);
+  protected readonly students = signal<AdminStudent[]>([]);
 
   constructor() {
     this.loadStudents();
   }
 
   protected onClassChange(event: Event): void {
-    this.selectedClass.set((event.target as HTMLSelectElement).value);
+    this.selectedClass.set(Number((event.target as HTMLSelectElement).value));
     this.loadStudents();
   }
 
@@ -31,7 +31,7 @@ export class TeacherStudentsComponent {
   }
 
   private loadStudents(): void {
-    this.peopleService.getStudentDirectory(this.selectedClass(), this.selectedSection())
+    this.peopleService.getStudentsByClassAndSection(this.selectedClass(), this.selectedSection())
       .subscribe(students => this.students.set(students));
   }
 }

@@ -13,9 +13,9 @@
       @if (activeTab === 'add') {
         <form class="admin-people-form" (submit)="$event.preventDefault(); save()">
           @for (field of fields; track field) {
-            <label>{{ field === 'joiningDate' ? 'Joining date' : field }}<input [type]="field === 'joiningDate' ? 'date' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required></label>
+            <label>{{ field === 'joiningDate' ? 'Joining date' : field === 'empId' ? 'Employee ID' : field === 'experience' ? 'Experience years' : field }}<input [type]="field === 'joiningDate' ? 'date' : field === 'email' ? 'email' : field === 'experience' ? 'number' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required></label>
           }
-          <button class="save-attendance" type="submit">Add teacher</button>
+          <button class="save-attendance" type="submit">{{ editingTeacherId === null ? 'Add teacher' : 'Update teacher' }}</button>
         </form>
       } @else {
         @if (loadingTeachers()) {
@@ -33,6 +33,7 @@
                   <span>{{ teacher.email }}</span>
                   <span>{{ teacher.phone }}</span>
                   <span>Joined {{ teacher.joiningDate }}</span>
+                  <button type="button" class="edit-link" (click)="editTeacher(teacher)">Edit</button>
                 </div>
               </article>
             }

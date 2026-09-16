@@ -15,7 +15,7 @@ export interface StudentDirectoryEntry {
   parentRelation: string;
 }
 export interface AdminStudent {
-  id: number;
+  id: number | null;
   name: string;
   gender: string;
   email: string;
@@ -97,6 +97,18 @@ export class PeopleService {
   getAdminTeachers(): Observable<AdminTeacher[]> {
     return this.http.get<TeacherResponse>('/rest/user-service/api/v1/teachers')
       .pipe(map(response => response.data));
+  }
+
+  updateStudent(student: AdminStudent): Observable<void> {
+    return this.http.put<void>(`/rest/user-service/api/v1/students/${student.id}`, student);
+  }
+
+  createStudent(student: AdminStudent): Observable<void> {
+    return this.http.post<void>('/rest/user-service/api/v1/students', student);
+  }
+
+  updateTeacher(teacher: AdminTeacher): Observable<void> {
+    return this.http.put<void>(`/rest/user-service/api/v1/teachers/${teacher.id}`, teacher);
   }
 
   getClassmates(studentId: number): Observable<Classmate[]> {

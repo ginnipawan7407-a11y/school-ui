@@ -29,7 +29,7 @@
               }
             </label>
           }
-          <button class="save-attendance" type="submit">Add student</button>
+          <button class="save-attendance" type="submit">{{ editingStudentId === null ? 'Add student' : 'Update student' }}</button>
         </form>
       } @else {
         <div class="admin-manage-controls" aria-label="Student filters">
@@ -57,6 +57,7 @@
                 <div>
                   <span>{{ student.email }}</span>
                   <span>{{ student.parentPhone }}</span>
+                  <button type="button" class="edit-link" (click)="editStudent(student)">Edit</button>
                 </div>
               </article>
             }

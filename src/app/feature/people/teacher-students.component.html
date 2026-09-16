@@ -12,7 +12,7 @@
   <section class="student-directory-controls" aria-label="Student directory filters">
     <label>Class
       <select [value]="selectedClass()" (change)="onClassChange($event)">
-        @for (className of classOptions; track className) { <option [value]="className">{{ className }}</option> }
+        @for (classId of classOptions; track classId) { <option [value]="classId">Class {{ classId }}</option> }
       </select>
     </label>
     <label>Section
@@ -33,9 +33,8 @@
         </div>
       </div>
       <div class="student-card-details">
-        <div><span>Class</span><strong>{{ student.className }} / {{ student.section }}</strong></div>
-        <div><span>Parent / guardian</span><strong>{{ student.parentName }}</strong><small>{{ student.parentRelation
-            }}</small></div>
+        <div><span>Class</span><strong>Class {{ student.classId }} / Section {{ student.sectionName }}</strong></div>
+        <div><span>Parent / guardian</span><strong>{{ student.fatherName }}</strong><small>Father</small></div>
         <div><span>Phone</span><a [href]="'tel:' + student.parentPhone">{{ student.parentPhone }}</a></div>
       </div>
     </article>
@@ -43,7 +42,7 @@
   </section>
   } @else {
   <section class="student-directory-empty">
-    <p>No students found for {{ selectedClass() }} / Section {{ selectedSection() }}.</p>
+    <p>No students found for Class {{ selectedClass() }} / Section {{ selectedSection() }}.</p>
   </section>
   }
 </main>
