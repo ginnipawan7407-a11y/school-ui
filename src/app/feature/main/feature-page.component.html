@@ -11,7 +11,48 @@
         }
       </div>
     }
-    <div class="feature-status"><span></span> Showing the local preview until the API is connected.</div>
+    @if (featureId === 'import-data' && role === 'Admin') {
+      <section class="admin-data-tools" aria-labelledby="admin-data-tools-title">
+        <h2 id="admin-data-tools-title">Import/Export Data</h2>
+        <div class="admin-data-tool">
+          <label for="import-type">Import CSV file</label>
+          <div class="admin-data-controls attendance-controls">
+            <select id="import-type" [value]="selectedImportType" (change)="selectedImportType = $any($event.target).value">
+              @for (dataType of adminDataTypes; track dataType) { <option [value]="dataType">{{ dataType }}</option> }
+            </select>
+            <input type="file" accept=".csv,text/csv" (change)="onFileSelected($event)">
+            <button class="save-attendance" type="button" (click)="importSelectedFile()">Import</button>
+          </div>
+        </div>
+        <div class="admin-data-tool">
+          <label for="sample-type">Export Sample CSV template</label>
+          <div class="admin-data-controls attendance-controls">
+            <select id="sample-type" [value]="selectedSampleType" (change)="selectedSampleType = $any($event.target).value">
+              @for (dataType of adminDataTypes; track dataType) { <option [value]="dataType">{{ dataType }}</option> }
+            </select>
+            <button class="save-attendance" type="button" (click)="downloadSample()">Export template</button>
+          </div>
+        </div>
+        <div class="admin-data-tool">
+          <label for="export-type">Export existing records</label>
+          <div class="admin-data-controls attendance-controls">
+            <select id="export-type" [value]="selectedExportType" (change)="selectedExportType = $any($event.target).value">
+              @for (dataType of adminDataTypes; track dataType) { <option [value]="dataType">{{ dataType }}</option> }
+            </select>
+            <button class="save-attendance" type="button" (click)="exportRecords()">Export records</button>
+          </div>
+        </div>
+        @if (dataMessage) { <p class="admin-data-message">{{ dataMessage }}</p> }
+        @if (dataError) { <p class="admin-data-error" role="alert">{{ dataError }}</p> }
+      </section>
+    }
+    <div class="feature-status"><span></span>
+      @if (featureId === 'import-data' && role === 'Admin') {
+        CSV tools are ready for Admin data management.
+      } @else {
+        Showing the local preview until the API is connected.
+      }
+    </div>
   </section>
 </main>
 <footer><span>Oakridge School</span><span>Learning together since 1987</span></footer>
