@@ -12,11 +12,11 @@ export class AdminDataService {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('type', dataType);
-    return this.http.post<void>('/api/admin/import', formData);
+    return this.http.post<void>('/rest/user-service/api/admin/import', formData);
   }
 
   exportRecords(dataType: AdminDataType): Observable<Blob> {
-    return this.http.get('/api/admin/export', {
+    return this.http.get('/rest/user-service/api/admin/export', {
       params: { type: dataType },
       responseType: 'blob'
     });
