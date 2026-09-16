@@ -4,6 +4,16 @@
     <h1 id="login-heading">Welcome back</h1>
     <p class="login-intro">Sign in to access your school workspace.</p>
     <form (ngSubmit)="submit()">
+      <label for="school">School</label>
+      <select id="school" name="school" [ngModel]="selectedSchoolId()" (ngModelChange)="selectedSchoolId.set($event)" [disabled]="isLoadingSchools() || !!schoolError()" required>
+        <option value="" disabled>{{ isLoadingSchools() ? 'Loading schools...' : 'Select your school' }}</option>
+        @for (school of schools(); track school.id) {
+          <option [value]="school.id">{{ school.name }}</option>
+        }
+      </select>
+      @if (schoolError()) {
+        <p class="login-error" role="alert">{{ schoolError() }}</p>
+      }
       <label for="username">Username</label>
       <input id="username" name="username" type="text" autocomplete="username" [ngModel]="username()" (ngModelChange)="username.set($event)" required>
       <label for="password">Password</label>
@@ -11,7 +21,7 @@
       @if (errorMessage()) {
         <p class="login-error" role="alert">{{ errorMessage() }}</p>
       }
-      <button type="submit" [disabled]="isSubmitting()">{{ isSubmitting() ? 'Signing in...' : 'Sign in' }}</button>
+      <button type="submit" [disabled]="isSubmitting() || isLoadingSchools() || !!schoolError() || !schools().length">{{ isSubmitting() ? 'Signing in...' : 'Sign in' }}</button>
     </form>
   </section>
 </main>

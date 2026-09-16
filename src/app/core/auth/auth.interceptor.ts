@@ -4,12 +4,13 @@ import { inject } from '@angular/core';
 import { AuthSessionService } from './auth-session.service';
 
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
-  const token = inject(AuthSessionService).token;
-  if (!token || !request.url.startsWith('/api/')) {
+  const session = inject(AuthSessionService);
+  if (!request.url.startsWith('/api/')) {
     return next(request);
   }
 
-  return next(request.clone({
-    setHeaders: { Authorization: `Bearer ${token}` }
-  }));
+  const headers: Record<string, string> = {};
+  if (session.token) headers['Authorization'] = `Bearer ${session.token}`;
+  if (session.schoolHeaderValue) headers['X-School-Name'] = session.schoolHeaderValue;
+  return next(request.clone({ setHeaders: headers }));
 };
