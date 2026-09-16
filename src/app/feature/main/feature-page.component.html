@@ -31,37 +31,6 @@
             </div>
           </div>
         }
-        @if (isAdminPeoplePage) {
-          <section class="admin-people-tools" aria-labelledby="admin-people-tools-title">
-            <h2 id="admin-people-tools-title">{{ isTeacherPage ? 'Manage Teachers' : 'Manage Students' }}</h2>
-            <div class="admin-data-tabs" role="tablist" aria-label="People management actions">
-              <button type="button" role="tab" [attr.aria-selected]="activePeopleTab === 'add'" [class.active]="activePeopleTab === 'add'" (click)="selectPeopleTab('add')">Add new</button>
-              <button type="button" role="tab" [attr.aria-selected]="activePeopleTab === 'manage'" [class.active]="activePeopleTab === 'manage'" (click)="selectPeopleTab('manage')">Manage</button>
-            </div>
-            @if (activePeopleTab === 'add') {
-              <form class="admin-people-form" (submit)="$event.preventDefault(); savePeople(isTeacherPage ? 'teachers' : 'students')">
-                @if (isTeacherPage) {
-                  @for (field of teacherFields; track field) {
-                    <label>{{ field === 'joiningDate' ? 'Joining date' : field }}<input [type]="field === 'joiningDate' ? 'date' : 'text'" [value]="teacherForm[field] ?? ''" (input)="updatePeopleField('teachers', field, $event)" required></label>
-                  }
-                  <button class="save-attendance" type="submit">Add teacher</button>
-                } @else {
-                  @for (field of studentFields; track field) {
-                    <label>{{ field === 'rollNumber' ? 'Roll no' : field === 'admissionNumber' ? 'Admission no' : field === 'className' ? 'Class' : field === 'parentMobile' ? 'Parent mobile' : field }}<input [type]="field === 'email' ? 'email' : 'text'" [value]="studentForm[field] ?? ''" (input)="updatePeopleField('students', field, $event)" required></label>
-                  }
-                  <button class="save-attendance" type="submit">Add student</button>
-                }
-              </form>
-            } @else {
-              <div class="admin-manage-placeholder" role="status">
-                <strong>{{ isTeacherPage ? 'Teacher' : 'Student' }} management</strong>
-                <span>Existing records will appear here when the management API is connected.</span>
-              </div>
-            }
-            @if (peopleMessage) { <p class="admin-data-message">{{ peopleMessage }}</p> }
-            @if (peopleError) { <p class="admin-data-error" role="alert">{{ peopleError }}</p> }
-          </section>
-        }
         @if (activeDataTab === 'sample') {
           <div class="admin-data-tool" role="tabpanel">
             <label for="sample-type">Export Sample CSV template</label>

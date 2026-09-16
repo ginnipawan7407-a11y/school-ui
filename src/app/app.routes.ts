@@ -19,6 +19,8 @@ import { StudentEventsComponent } from './feature/events/student-events.componen
 import { StudentResultComponent } from './feature/exams/student-result.component';
 import { authGuard } from './core/auth/auth.guard';
 import { LoginComponent } from './feature/auth/login.component';
+import { AdminTeachersComponent } from './feature/people/admin-teachers.component';
+import { AdminStudentsComponent } from './feature/people/admin-students.component';
 
 export const routes: Routes = [
 	{ path: 'login', component: LoginComponent },
@@ -30,6 +32,8 @@ export const routes: Routes = [
 	{ path: 'workspace/announcements', component: TeacherAnnouncementsComponent, canActivate: [authGuard] },
 	{ path: 'workspace/events', component: TeacherEventsComponent, canActivate: [authGuard] },
 	{ path: 'workspace/exam-result', component: TeacherExamResultsComponent, canActivate: [authGuard] },
+	{ path: 'workspace/teachers', component: AdminTeachersComponent, canActivate: [authGuard] },
+	{ path: 'workspace/students', component: AdminStudentsComponent, canActivate: [authGuard] },
 	{ path: 'student/attendance', component: StudentAttendanceComponent, canActivate: [authGuard] },
 	{ path: 'student/announcements', component: StudentAnnouncementsComponent, canActivate: [authGuard] },
 	{ path: 'student/events', component: StudentEventsComponent, canActivate: [authGuard] },
