@@ -44,6 +44,7 @@ export class FeaturePageComponent {
   protected readonly role = this.getRole(this.route.snapshot.queryParamMap.get('role'));
   protected readonly metrics = toSignal(this.getMetrics(this.featureId), { initialValue: [] as FeatureMetric[] });
   protected readonly adminDataTypes: AdminDataType[] = ['Student', 'Teacher', 'Class & Section'];
+  protected activeDataTab: 'import' | 'sample' | 'records' = 'import';
   protected selectedImportType: AdminDataType = 'Student';
   protected selectedSampleType: AdminDataType = 'Student';
   protected selectedExportType: AdminDataType = 'Student';
@@ -54,6 +55,12 @@ export class FeaturePageComponent {
   protected onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.selectedFile = input.files?.[0] ?? null;
+    this.dataMessage = '';
+    this.dataError = '';
+  }
+
+  protected selectDataTab(tab: 'import' | 'sample' | 'records'): void {
+    this.activeDataTab = tab;
     this.dataMessage = '';
     this.dataError = '';
   }
