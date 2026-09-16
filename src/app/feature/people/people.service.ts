@@ -34,14 +34,14 @@ const FALLBACK_DIRECTORY: StudentDirectoryEntry[] = [
 export class PeopleService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<PeopleSummary> {
-    return this.http.get<PeopleSummary>('/api/people/summary').pipe(
+    return this.http.get<PeopleSummary>('/rest/user-service/api/people/summary').pipe(
       catchError(() => of({ students: 324, teachers: 28, classmates: 31 }))
     );
   }
 
   getStudentDirectory(className: string, section: string): Observable<StudentDirectoryEntry[]> {
     const params = `class=${encodeURIComponent(className)}&section=${encodeURIComponent(section)}`;
-    return this.http.get<StudentDirectoryEntry[]>(`/api/people/students?${params}`).pipe(
+    return this.http.get<StudentDirectoryEntry[]>(`/rest/user-service/api/people/students?${params}`).pipe(
       catchError(() => of(FALLBACK_DIRECTORY.filter(student =>
         student.className === className && student.section === section
       ).map(student => ({ ...student }))))
@@ -49,7 +49,7 @@ export class PeopleService {
   }
 
   getClassmates(studentId: number): Observable<Classmate[]> {
-    return this.http.get<Classmate[]>(`/api/people/classmates?studentId=${studentId}`).pipe(
+    return this.http.get<Classmate[]>(`/rest/user-service/api/people/classmates?studentId=${studentId}`).pipe(
       catchError(() => of(FALLBACK_DIRECTORY.slice(0, 8).filter(student => student.id !== studentId).map(student => ({
         id: student.id, name: student.name, rollNumber: student.rollNumber, photoUrl: `https://i.pravatar.cc/160?img=${student.id + 10}`
       }))))
@@ -57,7 +57,7 @@ export class PeopleService {
   }
 
   getTeachers(studentId: number): Observable<TeacherContact[]> {
-    return this.http.get<TeacherContact[]>(`/api/people/teachers?studentId=${studentId}`).pipe(
+    return this.http.get<TeacherContact[]>(`/rest/user-service/api/people/teachers?studentId=${studentId}`).pipe(
       catchError(() => of([
         { id: 1, name: 'Maya Wilson', subject: 'Class Teacher · Mathematics', phone: '+1 555 0201', email: 'maya.wilson@oakridge.edu', isClassTeacher: true, photoUrl: 'https://i.pravatar.cc/160?img=47' },
         { id: 2, name: 'Daniel Brooks', subject: 'Science', phone: '+1 555 0202', email: 'daniel.brooks@oakridge.edu', isClassTeacher: false, photoUrl: 'https://i.pravatar.cc/160?img=12' },

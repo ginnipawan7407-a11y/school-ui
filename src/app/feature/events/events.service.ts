@@ -24,7 +24,7 @@ export class EventsService {
   ];
 
   getUpcoming(): Observable<SchoolEvent[]> {
-    return this.http.get<SchoolEvent[]>('/api/events').pipe(
+    return this.http.get<SchoolEvent[]>('/rest/user-service/api/events').pipe(
       catchError(() => of(this.fallbackEvents.slice(0, 2)))
     );
   }

@@ -39,7 +39,7 @@ interface ProfileResponse extends ProfilePayload {
 export class ProfileService {
   private readonly http = inject(HttpClient);
   getProfile(): Observable<ProfileSummary> {
-    return this.http.get<ProfileResponse>('/api/profile').pipe(
+    return this.http.get<ProfileResponse>('/rest/user-service/api/profile').pipe(
       map(response => this.toProfile(response.data ?? response)),
       catchError(() => of({
         id: 0,

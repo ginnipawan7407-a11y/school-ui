@@ -32,7 +32,7 @@ const FALLBACK_RESULTS: ExamResultRow[] = [
 export class ExamsService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<ExamSummary> {
-    return this.http.get<ExamSummary>('/api/exams/summary').pipe(
+    return this.http.get<ExamSummary>('/rest/user-service/api/exams/summary').pipe(
       catchError(() => of({ nextExam: '14 October', subject: 'Mathematics', resultStatus: 'Published' }))
     );
   }
@@ -40,7 +40,7 @@ export class ExamsService {
   getResults(filter: ResultFilter): Observable<ExamResultRow[]> {
     const params = new URLSearchParams({ class: filter.className, section: filter.section, academicYear: filter.academicYear });
     if (filter.studentName) params.set('studentName', filter.studentName);
-    return this.http.get<ExamResultRow[]>(`/api/exams/results?${params}`).pipe(
+    return this.http.get<ExamResultRow[]>(`/rest/user-service/api/exams/results?${params}`).pipe(
       catchError(() => of(FALLBACK_RESULTS.filter(result => !filter.studentName || result.studentName === filter.studentName).map(result => ({ ...result }))))
     );
   }
@@ -52,7 +52,7 @@ export class ExamsService {
     formData.append('academicYear', payload.academicYear);
     formData.append('rows', JSON.stringify(payload.rows));
     if (payload.finalResultFile) formData.append('finalResultFile', payload.finalResultFile, payload.finalResultFile.name);
-    return this.http.post<ResultUploadResponse>('/api/exams/results', formData).pipe(
+    return this.http.post<ResultUploadResponse>('/rest/user-service/api/exams/results', formData).pipe(
       catchError(() => of({ success: true, message: 'Results saved using the local preview.' }))
     );
   }
@@ -61,7 +61,7 @@ export class ExamsService {
     const formData = new FormData();
     formData.append('resultId', String(resultId));
     formData.append('paper', file, file.name);
-    return this.http.post<ResultUploadResponse>('/api/exams/results/subject-paper', formData).pipe(
+    return this.http.post<ResultUploadResponse>('/rest/user-service/api/exams/results/subject-paper', formData).pipe(
       catchError(() => of({ success: true, message: 'Subject paper uploaded using the local preview.' }))
     );
   }
