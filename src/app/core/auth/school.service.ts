@@ -25,11 +25,11 @@ const DEFAULT_SCHOOL: School = {
 
 const DUMMY_SCHOOLS: School[] = [
   {
-    id: 'oakridge',
-    name: 'Oakridge School',
-    shortName: 'Oakridge',
-    logoUrl: '/school-logos/oakridge.svg',
-    welcomeLogo: '/school-logos/oakridge.svg',
+    id: 'bpssv',
+    name: 'Bharti Public School',
+    shortName: 'Bharti',
+    logoUrl: '/school-logos/bpssv.png',
+    welcomeLogo: '/school-logos/bpssv.png',
     welcomeBackground: DEFAULT_WELCOME_BACKGROUND
   },
   {
