@@ -31,7 +31,7 @@ export class AuthService {
   private readonly session = inject(AuthSessionService);
 
   login(credentials: LoginRequest): Observable<void> {
-    return this.http.post<LoginResponse>('/http://192.168.1.10:8000/user-service/api/v1/auth/login', credentials).pipe(
+    return this.http.post<LoginResponse>('http://192.168.1.10:8000/user-service/api/v1/auth/login', credentials).pipe(
       map(response => {
         const token = response.data.token;
         const role = this.toRole(response.data.roles[0]);
