@@ -51,12 +51,17 @@ export class AdminTeachersComponent {
       address: this.form['address'],
       phone: this.form['mobile']
     };
-    this.peopleService.updateTeacher(teacher).subscribe({
+    const request = this.editingTeacherId === null
+      ? this.peopleService.createTeacher(teacher)
+      : this.peopleService.updateTeacher(teacher);
+    request.subscribe({
       next: () => {
-        this.message = 'Teacher details updated successfully.';
+        this.message = this.editingTeacherId === null
+          ? 'Teacher added successfully.'
+          : 'Teacher details updated successfully.';
         this.error = '';
         this.editingTeacherId = null;
-        this.loadTeachers();
+        if (this.activeTab === 'manage') this.loadTeachers();
       },
       error: () => {
         this.error = 'Unable to update teacher details.';
@@ -87,6 +92,10 @@ export class AdminTeachersComponent {
   }
 
   protected editTeacher(teacher: AdminTeacher): void {
+    if (teacher.id === null) {
+      this.error = 'Unable to edit teacher without an ID.';
+      return;
+    }
     this.activeTab = 'add';
     this.loadingTeacher.set(true);
     this.message = '';

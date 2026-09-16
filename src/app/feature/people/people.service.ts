@@ -30,7 +30,7 @@ export interface AdminStudent {
   parentPhone: string;
 }
 export interface AdminTeacher {
-  id: number;
+  id: number | null;
   name: string;
   gender: string;
   email: string;
@@ -122,6 +122,10 @@ export class PeopleService {
 
   updateTeacher(teacher: AdminTeacher): Observable<void> {
     return this.http.put<void>(`/rest/user-service/api/v1/teachers/${teacher.id}`, teacher);
+  }
+
+  createTeacher(teacher: AdminTeacher): Observable<void> {
+    return this.http.post<void>('/rest/user-service/api/v1/teachers', teacher);
   }
 
   getClassmates(studentId: number): Observable<Classmate[]> {
