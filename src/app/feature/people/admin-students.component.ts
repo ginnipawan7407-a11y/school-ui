@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './admin-people-management.css'
 })
 export class AdminStudentsComponent {
-  protected readonly fields = ['name', 'rollNumber', 'admissionNumber', 'address', 'fatherName', 'motherName', 'parentMobile', 'className', 'section', 'email'];
+  protected readonly fields = ['name', 'rollNumber', 'admissionNumber', 'dob', 'address', 'fatherName', 'motherName', 'parentMobile', 'className', 'section', 'email'];
   protected readonly classOptions = ['Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
   protected readonly sectionOptions = ['A', 'B', 'C'];
   protected readonly form: Record<string, string> = {};
@@ -17,7 +17,7 @@ export class AdminStudentsComponent {
   protected error = '';
 
   protected labelFor(field: string): string {
-    return { rollNumber: 'Roll no', admissionNumber: 'Admission no', className: 'Class', parentMobile: 'Parent mobile' }[field] ?? field;
+    return { rollNumber: 'Roll no', admissionNumber: 'Admission no', dob: 'Date of birth', className: 'Class', parentMobile: 'Parent mobile' }[field] ?? field;
   }
 
   protected updateField(field: string, event: Event): void {

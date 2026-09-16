@@ -25,7 +25,7 @@
                   @for (section of sectionOptions; track section) { <option [value]="section">Section {{ section }}</option> }
                 </select>
               } @else {
-                <input [type]="field === 'email' ? 'email' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required>
+                <input [type]="field === 'email' ? 'email' : field === 'dob' ? 'date' : 'text'" [value]="form[field] ?? ''" (input)="updateField(field, $event)" required>
               }
             </label>
           }
