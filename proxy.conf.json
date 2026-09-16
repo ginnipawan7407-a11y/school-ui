@@ -1,7 +1,10 @@
 {
-  "/api": {
-    "target": "http://192.168.1.10:8000/user-service",
+  "/rest": {
+    "target": "http://192.168.1.10:8000",
     "secure": false,
-    "changeOrigin": true
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/rest": ""
+    }
   }
 }

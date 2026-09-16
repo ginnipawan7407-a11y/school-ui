@@ -9,7 +9,7 @@ export class DashboardService {
   private readonly http = inject(HttpClient);
 
   getDashboardData(): Observable<DashboardData> {
-    return this.http.get<DashboardData>('/api/dashboard').pipe(
+    return this.http.get<DashboardData>('/rest/user-service/api/dashboard').pipe(
       catchError(() => of(FALLBACK_DASHBOARD_DATA))
     );
   }

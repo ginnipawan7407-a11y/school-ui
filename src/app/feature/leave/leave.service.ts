@@ -35,37 +35,37 @@ const FALLBACK_APPLICATIONS: LeaveApplication[] = [
 export class LeaveService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<LeaveSummary> {
-    return this.http.get<LeaveSummary>('/api/leave/summary').pipe(
+    return this.http.get<LeaveSummary>('/rest/user-service/api/leave/summary').pipe(
       catchError(() => of({ pending: 1, approved: 4, remaining: 12 }))
     );
   }
 
   getStudents(): Observable<LeaveStudent[]> {
-    return this.http.get<LeaveStudent[]>('/api/leave/students').pipe(
+    return this.http.get<LeaveStudent[]>('/rest/user-service/api/leave/students').pipe(
       catchError(() => of(FALLBACK_STUDENTS.map(student => ({ ...student }))))
     );
   }
 
   getApplications(): Observable<LeaveApplication[]> {
-    return this.http.get<LeaveApplication[]>('/api/leave/applications').pipe(
+    return this.http.get<LeaveApplication[]>('/rest/user-service/api/leave/applications').pipe(
       catchError(() => of(FALLBACK_APPLICATIONS.map(application => ({ ...application }))))
     );
   }
 
   applyLeave(application: Omit<LeaveApplication, 'id' | 'status'>): Observable<LeaveApplication> {
-    return this.http.post<LeaveApplication>('/api/leave/applications', application).pipe(
+    return this.http.post<LeaveApplication>('/rest/user-service/api/leave/applications', application).pipe(
       catchError(() => of({ ...application, id: Date.now(), status: 'PENDING' as LeaveStatus }))
     );
   }
 
   updateStatus(applicationId: number, status: LeaveStatus): Observable<{ success: boolean }> {
-    return this.http.patch<{ success: boolean }>(`/api/leave/applications/${applicationId}/status`, { status }).pipe(
+    return this.http.patch<{ success: boolean }>(`/rest/user-service/api/leave/applications/${applicationId}/status`, { status }).pipe(
       catchError(() => of({ success: true }))
     );
   }
 
   getMyApplications(studentId: number): Observable<StudentLeaveApplication[]> {
-    return this.http.get<StudentLeaveApplication[]>(`/api/leave/my-applications?studentId=${studentId}`).pipe(
+    return this.http.get<StudentLeaveApplication[]>(`/rest/user-service/api/leave/my-applications?studentId=${studentId}`).pipe(
       catchError(() => of(FALLBACK_APPLICATIONS.filter(application => application.studentId === studentId).map(application => ({ ...application }))))
     );
   }

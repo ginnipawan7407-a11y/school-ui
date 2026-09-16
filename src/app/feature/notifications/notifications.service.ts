@@ -8,7 +8,7 @@ export interface NotificationSummary { unread: number; latest: string; }
 export class NotificationsService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<NotificationSummary> {
-    return this.http.get<NotificationSummary>('/api/notifications/summary').pipe(
+    return this.http.get<NotificationSummary>('/rest/user-service/api/notifications/summary').pipe(
       catchError(() => of({ unread: 3, latest: 'New homework feedback is available' }))
     );
   }

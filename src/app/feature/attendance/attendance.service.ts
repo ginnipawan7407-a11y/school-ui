@@ -22,34 +22,34 @@ const FALLBACK_STUDENTS: AttendanceStudent[] = [
 export class AttendanceService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<AttendanceSummary> {
-    return this.http.get<AttendanceSummary>('/api/attendance/summary').pipe(
+    return this.http.get<AttendanceSummary>('/rest/user-service/api/attendance/summary').pipe(
       catchError(() => of({ present: 28, absent: 2, late: 1 }))
     );
   }
 
   getStudents(className: string, section: string, date: string): Observable<AttendanceStudent[]> {
     const params = `class=${encodeURIComponent(className)}&section=${encodeURIComponent(section)}&date=${date}`;
-    return this.http.get<AttendanceStudent[]>(`/api/attendance/students?${params}`).pipe(
+    return this.http.get<AttendanceStudent[]>(`/rest/user-service/api/attendance/students?${params}`).pipe(
       catchError(() => of(FALLBACK_STUDENTS.map(student => ({ ...student }))))
     );
   }
 
   getStudentHistory(className: string, section: string, studentId: number, startDate: string, endDate: string): Observable<AttendanceRecord[]> {
     const params = `class=${encodeURIComponent(className)}&section=${encodeURIComponent(section)}&studentId=${studentId}&startDate=${startDate}&endDate=${endDate}`;
-    return this.http.get<AttendanceRecord[]>(`/api/attendance/history?${params}`).pipe(
+    return this.http.get<AttendanceRecord[]>(`/rest/user-service/api/attendance/history?${params}`).pipe(
       catchError(() => of(this.fallbackHistory(startDate, endDate, studentId)))
     );
   }
 
   saveAttendance(className: string, section: string, date: string, students: AttendanceStudent[]): Observable<{ success: boolean }> {
-    return this.http.post<{ success: boolean }>('/api/attendance', { className, section, date, students }).pipe(
+    return this.http.post<{ success: boolean }>('/rest/user-service/api/attendance', { className, section, date, students }).pipe(
       catchError(() => of({ success: true }))
     );
   }
 
   getClassHistory(className: string, section: string, startDate: string, endDate: string): Observable<ClassAttendanceDay[]> {
     const params = `class=${encodeURIComponent(className)}&section=${encodeURIComponent(section)}&startDate=${startDate}&endDate=${endDate}`;
-    return this.http.get<ClassAttendanceDay[]>(`/api/attendance/class-history?${params}`).pipe(
+    return this.http.get<ClassAttendanceDay[]>(`/rest/user-service/api/attendance/class-history?${params}`).pipe(
       catchError(() => of(this.fallbackClassHistory(startDate, endDate)))
     );
   }
