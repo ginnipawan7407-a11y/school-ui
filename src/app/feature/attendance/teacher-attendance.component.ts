@@ -131,9 +131,15 @@ export class TeacherAttendanceComponent {
     this.saveMessage.set('');
     this.attendanceService.saveAttendance(
       this.selectedClass(), this.selectedSection(), this.selectedStartDate(), this.students()
-    ).subscribe(() => {
-      this.isSaving.set(false);
-      this.saveMessage.set('Attendance saved successfully.');
+    ).subscribe({
+      next: () => {
+        this.isSaving.set(false);
+        this.saveMessage.set('Attendance saved successfully.');
+      },
+      error: () => {
+        this.isSaving.set(false);
+        this.saveMessage.set('Attendance could not be saved. Please try again.');
+      }
     });
   }
 

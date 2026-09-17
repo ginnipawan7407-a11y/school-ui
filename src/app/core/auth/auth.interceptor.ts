@@ -5,7 +5,7 @@ import { AuthSessionService } from './auth-session.service';
 
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const session = inject(AuthSessionService);
-  if (!request.url.startsWith('/rest/user-service/api/')) {
+  if (!request.url.startsWith('/rest/user-service/api/') && !request.url.startsWith('/attendance/api/')) {
     return next(request);
   }
 
