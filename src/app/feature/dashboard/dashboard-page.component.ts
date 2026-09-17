@@ -21,8 +21,7 @@ export class DashboardPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly role = signal<Role>(
-    this.authSession.role ?? this.getRole(this.route.snapshot.queryParamMap.get('role'))
-  );
+    this.authSession.role ?? 'Student');
   protected readonly dashboard = toSignal(this.dashboardService.getDashboardData(), {
     initialValue: FALLBACK_DASHBOARD_DATA
   });
@@ -31,8 +30,6 @@ export class DashboardPageComponent {
   protected selectRole(role: Role): void {
     this.role.set(role);
     void this.router.navigate([], {
-      queryParams: { role },
-      queryParamsHandling: 'merge',
       replaceUrl: true
     });
   }

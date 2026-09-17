@@ -37,7 +37,6 @@ export class FeaturePageComponent {
   private readonly profileService = inject(ProfileService);
   protected readonly featureId = this.route.snapshot.paramMap.get('id') ?? this.route.snapshot.routeConfig?.path ?? '';
   protected readonly item: MenuItem = this.findItem(this.featureId);
-  protected readonly role = this.getRole(this.route.snapshot.queryParamMap.get('role'));
   protected readonly metrics = toSignal(this.getMetrics(this.featureId), { initialValue: [] as FeatureMetric[] });
   private getMetrics(id: string): Observable<FeatureMetric[]> {
     switch (id) {
