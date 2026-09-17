@@ -1,7 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { AttendanceRecord, AttendanceService, AttendanceStudent } from './attendance.service';
+import { AttendanceService } from './attendance.service';
+import { AttendanceRecord, AttendanceStudent } from '../../common/model/models';
 import { LeaveApplication, LeaveService } from '../leave/leave.service';
 
 type AttendanceMode = 'mark' | 'history';

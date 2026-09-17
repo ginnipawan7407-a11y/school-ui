@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
+import { apiUrl } from '../../core/config/api.config';
 
 export interface SchoolEvent {
   id?: number;
@@ -24,7 +25,7 @@ export class EventsService {
   ];
 
   getUpcoming(): Observable<SchoolEvent[]> {
-    return this.http.get<SchoolEvent[]>('/rest/user-service/api/events').pipe(
+    return this.http.get<SchoolEvent[]>(apiUrl('/api/events')).pipe(
       catchError(() => of(this.fallbackEvents.slice(0, 2)))
     );
   }
