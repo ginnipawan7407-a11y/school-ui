@@ -1,11 +1,57 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { ProfileService } from '../profile/profile.service';
 
 export interface AttendanceSummary { present: number; absent: number; late: number; }
-export interface AttendanceStudent { id: number; name: string; rollNumber: string; present: boolean; onLeave?: boolean; }
+export interface AttendanceStudent {
+  id: number;
+  name: string;
+  rollNumber: string;
+  present: boolean;
+  onLeave?: boolean;
+  admissionNumber?: number;
+  classId?: number;
+  sectionName?: string;
+  attendanceId?: number;
+}
 export interface AttendanceRecord { date: string; present: boolean; onLeave?: boolean; }
 export interface ClassAttendanceDay { date: string; present: number; absent: number; onLeave: number; }
+
+interface StudentRosterEntry {
+  id: number;
+  name: string;
+  rollNumber: number;
+  admissionNumber: number;
+  classId: number;
+  sectionName: string;
+}
+
+interface AttendanceApiRecord {
+  id: number;
+  admissionNumber: number;
+  teacherId: number;
+  classId: number;
+  sectionName: string;
+  attendanceDate: string;
+  status: 'PRESENT' | 'ABSENT' | 'LEAVE' | string;
+  remarks: string;
+}
+
+interface AttendanceApiResponse {
+  data: AttendanceApiRecord[];
+}
+
+interface AttendanceSubmission {
+  id: number;
+  admissionNumber: number;
+  teacherId: number;
+  classId: number;
+  sectionName: string;
+  attendanceDate: string;
+  status: 'PRESENT' | 'ABSENT';
+  remarks: string;
+}
 
 const FALLBACK_STUDENTS: AttendanceStudent[] = [
   { id: 1, name: 'Aarav Sharma', rollNumber: 'OA-801', present: true },
@@ -21,6 +67,7 @@ const FALLBACK_STUDENTS: AttendanceStudent[] = [
 @Injectable({ providedIn: 'root' })
 export class AttendanceService {
   private readonly http = inject(HttpClient);
+  private readonly profileService = inject(ProfileService);
   getSummary(): Observable<AttendanceSummary> {
     return this.http.get<AttendanceSummary>('/rest/user-service/api/attendance/summary').pipe(
       catchError(() => of({ present: 28, absent: 2, late: 1 }))
@@ -28,8 +75,29 @@ export class AttendanceService {
   }
 
   getStudents(className: string, section: string, date: string): Observable<AttendanceStudent[]> {
-    const params = `class=${encodeURIComponent(className)}&section=${encodeURIComponent(section)}&date=${date}`;
-    return this.http.get<AttendanceStudent[]>(`/rest/user-service/api/attendance/students?${params}`).pipe(
+    const classId = this.classIdFromName(className);
+    const roster$ = this.http.get<{ data: StudentRosterEntry[] }>(
+      `/rest/user-service/api/v1/students/class/${classId}/section/${encodeURIComponent(section)}`
+    );
+    const attendance$ = this.getClassAttendance(classId, section, date);
+    return forkJoin({ roster: roster$, attendance: attendance$ }).pipe(
+      map(({ roster, attendance }) => {
+        const records = new Map(attendance.map(record => [record.admissionNumber, record]));
+        return roster.data.map(student => {
+          const record = records.get(student.admissionNumber);
+          return {
+            id: student.id,
+            name: student.name,
+            rollNumber: String(student.rollNumber),
+            present: record?.status === 'PRESENT',
+            onLeave: record?.status === 'LEAVE',
+            admissionNumber: student.admissionNumber,
+            classId: student.classId,
+            sectionName: student.sectionName,
+            attendanceId: record?.id
+          };
+        });
+      }),
       catchError(() => of(FALLBACK_STUDENTS.map(student => ({ ...student }))))
     );
   }
@@ -42,9 +110,41 @@ export class AttendanceService {
   }
 
   saveAttendance(className: string, section: string, date: string, students: AttendanceStudent[]): Observable<{ success: boolean }> {
-    return this.http.post<{ success: boolean }>('/rest/user-service/api/attendance', { className, section, date, students }).pipe(
-      catchError(() => of({ success: true }))
+    const classId = this.classIdFromName(className);
+    return this.profileService.getProfile().pipe(
+      map(profile => students
+        .filter(student => !student.onLeave && student.admissionNumber !== undefined)
+        .map(student => ({
+          id: student.attendanceId ?? 0,
+          admissionNumber: student.admissionNumber as number,
+          teacherId: profile.id,
+          classId: student.classId ?? classId,
+          sectionName: student.sectionName ?? section,
+          attendanceDate: date,
+          status: student.present ? 'PRESENT' : 'ABSENT',
+          remarks: ''
+        } satisfies AttendanceSubmission))),
+      switchMap(payload => this.http.post<unknown>('/attendance/api/v1/attendance/mark/all', payload)),
+      map(() => ({ success: true })),
+      catchError(error => throwError(() => error))
     );
+  }
+
+  private getClassAttendance(classId: number, section: string, date: string): Observable<AttendanceApiRecord[]> {
+    const formattedDate = this.toApiDate(date);
+    return this.http.get<AttendanceApiResponse>(
+      `/attendance/api/v1/attendance/class/${classId}/section/${encodeURIComponent(section)}?date=${formattedDate}`
+    ).pipe(map(response => response.data ?? []));
+  }
+
+  private classIdFromName(className: string): number {
+    const classId = Number(className.match(/\d+/)?.[0]);
+    return Number.isInteger(classId) ? classId : 0;
+  }
+
+  private toApiDate(date: string): string {
+    const [year, month, day] = date.split('-');
+    return `${day}-${month}-${year}`;
   }
 
   getClassHistory(className: string, section: string, startDate: string, endDate: string): Observable<ClassAttendanceDay[]> {
