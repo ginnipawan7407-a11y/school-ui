@@ -42,10 +42,13 @@ export class LoginComponent {
         this.schoolError.set('Unable to load schools. Refresh the page and try again.');
       }
     });
+    this.authService.logout();
   }
 
   setSelectedSchool(schoolId: string): void {
     this.selectedSchoolId.set(schoolId);
+
+    this.authService.setSchoolCode(this.selectedSchool()?.schoolCode ?? '');
     this.getAdminToken();
   }
   createAdminUser(): void {
@@ -59,7 +62,6 @@ export class LoginComponent {
       next: () => {
         this.username.set('');
         this.password.set('');
-        this.selectedSchoolId.set('');
         this.adminToken.set('');
         this.errorMessage.set('Admin user created successfully. You can now sign in.');
       },
@@ -89,7 +91,8 @@ export class LoginComponent {
 
     this.isSubmitting.set(true);
     this.errorMessage.set('');
-    this.authService.setSchoolId(String(selectedSchool.schoolCode));
+    this.authService.setSchoolCode(String(selectedSchool.schoolCode));
+    this.authService
     this.authService.login({
       username: this.username().trim(),
       password: this.password()

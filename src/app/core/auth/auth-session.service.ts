@@ -4,12 +4,13 @@ import { Role } from '../../common/model/dashboard.models';
 
 const TOKEN_KEY = 'school_auth_token';
 const ROLE_KEY = 'school_auth_role';
-const SCHOOL_NAME_KEY = 'X-School-Name';
+const SCHOOL_CODE_KEY = 'X-School-Code';
 
 @Injectable({ providedIn: 'root' })
 export class AuthSessionService {
   private readonly tokenState = signal<string | null>(sessionStorage.getItem(TOKEN_KEY));
-  private readonly schoolCodeState = signal<string | null>(sessionStorage.getItem(SCHOOL_NAME_KEY));
+  private readonly schoolCodeState = signal<string | null>(sessionStorage.getItem(SCHOOL_CODE_KEY));
+
   readonly isAuthenticatedState = this.tokenState.asReadonly();
   readonly selectedSchoolIdState = this.schoolCodeState.asReadonly();
 
@@ -22,7 +23,7 @@ export class AuthSessionService {
   }
 
   get schoolHeaderValue(): string | null {
-    return sessionStorage.getItem(SCHOOL_NAME_KEY);
+    return sessionStorage.getItem(SCHOOL_CODE_KEY);
   }
 
   get isAuthenticated(): boolean {
@@ -35,15 +36,15 @@ export class AuthSessionService {
     this.tokenState.set(token);
   }
 
-  setSchoolId(schoolCode: string): void {
-    sessionStorage.setItem(SCHOOL_NAME_KEY, schoolCode);
+  setSchoolCode(schoolCode: string): void {
+    sessionStorage.setItem(SCHOOL_CODE_KEY, schoolCode);
     this.schoolCodeState.set(schoolCode);
   }
 
   clearSession(): void {
     sessionStorage.removeItem(TOKEN_KEY);
     sessionStorage.removeItem(ROLE_KEY);
-    sessionStorage.removeItem(SCHOOL_NAME_KEY);
+    sessionStorage.removeItem(SCHOOL_CODE_KEY);
     this.tokenState.set(null);
     this.schoolCodeState.set(null);
   }

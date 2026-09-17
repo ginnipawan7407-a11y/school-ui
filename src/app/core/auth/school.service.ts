@@ -53,11 +53,34 @@ export class SchoolService {
     );
   }
 
+  getSchoolByCode(schoolCode: string): Observable<School> {
+    return this.http.get<{ data: School }>(`/rest/user-service/api/v1/schools/public/code/${schoolCode}`).pipe(
+      map(response => this.withBranding(response.data)),
+      catchError(() => of(this.withBranding(DEFAULT_SCHOOL)))
+    );
+  }
+
+  private setSchoolData(code: string): void {
+    this.getSchoolByCode(code).subscribe({
+      next: school => {
+        this.schools.set([...this.schools(), school]);
+      },
+      error: () => {
+        console.error(`Failed to fetch school data for code: ${code}`);
+      }
+    });
+  }
+
   getBranding(schoolCode: string | null): School {
     if (schoolCode === null) return this.withBranding(DEFAULT_SCHOOL);
 
-    return this.schools().find(school => school.schoolCode === schoolCode)
-      ?? this.withBranding({ schoolCode, schoolName: schoolCode });
+    var school = this.schools().find(school => String(school.schoolCode) === String(schoolCode));
+    if (!school) {
+      this.setSchoolData(schoolCode);
+      school = this.schools().find(school => String(school.schoolCode) === String(schoolCode));
+    }
+
+    return school ?? this.withBranding({ schoolCode, schoolName: schoolCode });
   }
 
   private withBranding(school: Partial<School>): School {

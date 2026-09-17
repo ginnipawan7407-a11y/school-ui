@@ -11,6 +11,6 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
 
   const headers: Record<string, string> = {};
   if (session.token) headers['Authorization'] = `Bearer ${session.token}`;
-  if (session.schoolHeaderValue) headers['X-School-Name'] = session.schoolHeaderValue;
+  if (session.schoolHeaderValue) headers['X-School-Code'] = session.schoolHeaderValue;
   return next(request.clone({ setHeaders: headers }));
 };
