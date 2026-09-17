@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
+import { apiUrl } from '../../core/config/api.config';
 
 export interface ProfileSummary {
   id: number;
@@ -82,7 +83,7 @@ interface ProfileResponse extends ProfilePayload {
 export class ProfileService {
   private readonly http = inject(HttpClient);
   getProfile(): Observable<ProfileSummary> {
-    return this.http.get<ProfileApiResponse>('/rest/user-service/api/v1/users/profile').pipe(
+    return this.http.get<ProfileApiResponse>(apiUrl('/api/v1/users/profile')).pipe(
       map(response => {
         var teacherProfile = response.data?.teacher;
         var studentProfile = response.data?.student;

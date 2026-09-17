@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
+import { apiUrl } from '../../core/config/api.config';
 
 export interface HomeworkSummary { pending: number; submitted: number; nextDue: string; }
 export interface HomeworkUploadResponse { success: boolean; message: string; }
@@ -17,7 +18,7 @@ const FALLBACK_STUDENT_WORK: StudentWorkItem[] = [
 export class HomeworkService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<HomeworkSummary> {
-    return this.http.get<HomeworkSummary>('/rest/user-service/api/homework/summary').pipe(
+    return this.http.get<HomeworkSummary>(apiUrl('/api/homework/summary')).pipe(
       catchError(() => of({ pending: 3, submitted: 18, nextDue: 'Friday' }))
     );
   }
@@ -29,13 +30,13 @@ export class HomeworkService {
     formData.append('workType', workType);
     if (file) formData.append('file', file, file.name);
 
-    return this.http.post<HomeworkUploadResponse>('/rest/user-service/api/homework/upload', formData).pipe(
+    return this.http.post<HomeworkUploadResponse>(apiUrl('/api/homework/upload'), formData).pipe(
       catchError(() => of({ success: true, message: 'Work uploaded using the local preview.' }))
     );
   }
 
   getStudentWork(studentId: number): Observable<StudentWorkItem[]> {
-    return this.http.get<StudentWorkItem[]>(`/rest/user-service/api/homework/student-work?studentId=${studentId}`).pipe(
+    return this.http.get<StudentWorkItem[]>(apiUrl(`/api/homework/student-work?studentId=${studentId}`)).pipe(
       catchError(() => of(FALLBACK_STUDENT_WORK.map(work => ({ ...work }))))
     );
   }

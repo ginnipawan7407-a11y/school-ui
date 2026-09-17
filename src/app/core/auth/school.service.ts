@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
+import { apiUrl } from '../config/api.config';
 
 export interface School {
   id: number;
@@ -46,7 +47,7 @@ export class SchoolService {
   private readonly schools = signal<School[]>(DUMMY_SCHOOLS);
 
   getSchools(): Observable<School[]> {
-    return this.http.get<SchoolResponse>('/rest/user-service/api/v1/schools/public/all').pipe(
+    return this.http.get<SchoolResponse>(apiUrl('/api/v1/schools/public/all')).pipe(
       map(response => response.data.map(school => this.withBranding(school))),
       tap(schools => this.schools.set(schools)),
       catchError(() => of(DUMMY_SCHOOLS))
@@ -54,7 +55,7 @@ export class SchoolService {
   }
 
   getSchoolByCode(schoolCode: string): Observable<School> {
-    return this.http.get<{ data: School }>(`/rest/user-service/api/v1/schools/public/code/${schoolCode}`).pipe(
+    return this.http.get<{ data: School }>(apiUrl(`/api/v1/schools/public/code/${schoolCode}`)).pipe(
       map(response => this.withBranding(response.data)),
       catchError(() => of(this.withBranding(DEFAULT_SCHOOL)))
     );

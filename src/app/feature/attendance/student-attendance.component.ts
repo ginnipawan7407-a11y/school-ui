@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AttendanceRecord, AttendanceService } from './attendance.service';
+import { AttendanceService } from './attendance.service';
+import { AttendanceRecord } from '../../common/model/models';
 import { LeaveApplication, LeaveService } from '../leave/leave.service';
 
 interface CalendarDay { date: string; day: number; inRange: boolean; present: boolean | null; onLeave: boolean; }
