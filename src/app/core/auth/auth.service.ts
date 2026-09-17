@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 
 import { Role } from '../../common/model/dashboard.models';
 import { AuthSessionService } from './auth-session.service';
@@ -10,6 +10,28 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface UserRegistrationRequest {
+  username: string;
+  password: string;
+  phoneNumber?: string;
+  role: 'TEACHER' | 'STUDENT' | 'ADMIN';
+}
+
+interface UserRegistrationResponse 
+{
+  status: string;
+  code: 200,
+  message: string;
+  data: {
+    id: number;
+    username: string;
+    token: string;
+    refreshToken?: string;
+    roles: string[];
+    active: boolean;
+  },
+  timestamp: Date;
+}
 interface LoginResponse {
   status: string;
   code: number;
@@ -45,8 +67,25 @@ export class AuthService {
     );
   }
 
-  setSchoolId(schoolId: string): void {
-    this.session.setSchoolId(schoolId);
+  createAdmin(adminReq: UserRegistrationRequest, token: string): Observable<void> {
+    return this.http.post<UserRegistrationResponse>('/rest/user-service/api/v1/users/register/admin/' + token, adminReq).pipe(
+      map(response => {
+        if (response.code > 299) {
+          throw new Error('Admin creation failed.');
+        }
+      })
+    );
+  }
+
+  getAdminToken(): Observable<string> {
+    return this.http.get<{ data: string }>('/rest/user-service/api/v1/users/register/admin/token').pipe(
+      map(response => response.data),
+      catchError(() => of(''))
+    );
+  }
+
+  setSchoolId(schoolCode: string): void {
+    this.session.setSchoolId(schoolCode);
   }
 
   logout(): void {

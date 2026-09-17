@@ -1,7 +1,7 @@
 <header class="topbar">
-  <a class="brand" routerLink="/" [attr.aria-label]="school().name + ' home'">
-    <img class="school-logo" [src]="school().logoUrl || defaultLogo" [alt]="school().name + ' logo'" (error)="useDefaultLogo($event)">
-    <span class="brand-copy"><strong>{{ school().shortName }}</strong><small>School portal</small></span>
+  <a class="brand" routerLink="/" [attr.aria-label]="school().schoolName + ' home'">
+    <img class="school-logo" [src]="school().logo || defaultLogo" [alt]="school().schoolName + ' logo'" (error)="useDefaultLogo($event)">
+    <span class="brand-copy"><strong>{{ school().schoolName }}</strong><small>School portal</small></span>
   </a>
   <div class="topbar-actions">
     <span class="date-label">{{ today }}</span>

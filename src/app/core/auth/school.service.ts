@@ -3,71 +3,61 @@ import { Injectable, inject, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 
 export interface School {
-  id: string | number;
-  name: string;
-  logoUrl?: string;
-  welcomeLogo?: string;
-  welcomeBackground?: string;
-  shortName: string;
+  id: number;
+  schoolName: string;
+  schoolCode: string;
+  address?: String;
+  phone?: String;
+  email?: String;
+  website?: String;
+  principalName?: String;
+  announcement?: String;
+  logo?: String;
+  favicon?: String;
+  banner?: String;
 }
 
 const DEFAULT_LOGO = '/image/default-logo.svg';
 const DEFAULT_WELCOME_BACKGROUND = '/image/school-welcom-background.svg';
 const DEFAULT_WELCOME_MESSAGE = 'Welcom to the school management application, Please contact +91-8130579771 to get onBoarded as a school.';
 const DEFAULT_SCHOOL: School = {
-  id: 'default',
-  name: 'School Management Application',
-  shortName: 'School Management',
-  logoUrl: DEFAULT_LOGO,
-  welcomeLogo: DEFAULT_LOGO,
-  welcomeBackground: DEFAULT_WELCOME_BACKGROUND
+  schoolName: 'School Management Application',
+  schoolCode: 'School Management',
+  logo: DEFAULT_LOGO,
+  favicon: DEFAULT_LOGO,
+  banner: DEFAULT_WELCOME_BACKGROUND,
+  id: 0,
 };
 
 const DUMMY_SCHOOLS: School[] = [
-  {
-    id: 'bpssv',
-    name: 'Bharti Public School',
-    shortName: 'Bharti',
-    logoUrl: '/school-logos/bpssv.png',
-    welcomeLogo: '/school-logos/bpssv.png',
-    welcomeBackground: '/school-logos/bpssv-welcome-background.jpg'
-  },
-  {
-    id: 'greenwood',
-    name: 'Greenwood Academy',
-    shortName: 'Greenwood',
-    logoUrl: '/school-logos/greenwood.svg',
-    welcomeLogo: '/school-logos/greenwood.svg',
-    welcomeBackground: DEFAULT_WELCOME_BACKGROUND
-  },
-  {
-    id: 'lakeside',
-    name: 'Lakeside Public School',
-    shortName: 'Lakeside',
-    logoUrl: '/school-logos/lakeside.svg',
-    welcomeLogo: '/school-logos/lakeside.svg',
-    welcomeBackground: DEFAULT_WELCOME_BACKGROUND
-  }
 ];
 
+
+interface SchoolResponse {
+  status: string;
+  code: number;
+  message: string;
+  data: School[];
+  timestamp: string;
+}
 @Injectable({ providedIn: 'root' })
 export class SchoolService {
   private readonly http = inject(HttpClient);
   private readonly schools = signal<School[]>(DUMMY_SCHOOLS);
 
   getSchools(): Observable<School[]> {
-    return this.http.get<Partial<School>[]>('/api/v1/schools').pipe(
-      map(schools => schools.map(school => this.withBranding(school))),
+    return this.http.get<SchoolResponse>('/rest/user-service/api/v1/schools/public/all').pipe(
+      map(response => response.data.map(school => this.withBranding(school))),
       tap(schools => this.schools.set(schools)),
       catchError(() => of(DUMMY_SCHOOLS))
     );
   }
 
-  getBranding(schoolId: string | number | null): School {
-    if (schoolId === null || schoolId === '') return this.withBranding(DEFAULT_SCHOOL);
+  getBranding(schoolCode: string | null): School {
+    if (schoolCode === null) return this.withBranding(DEFAULT_SCHOOL);
 
-    return this.schools().find(school => String(school.id) === String(schoolId))
-      ?? this.withBranding({ id: schoolId, name: String(schoolId) });
+    return this.schools().find(school => school.schoolCode === schoolCode)
+      ?? this.withBranding({ schoolCode, schoolName: schoolCode });
   }
 
   private withBranding(school: Partial<School>): School {
@@ -75,10 +65,8 @@ export class SchoolService {
     return {
       ...branding,
       ...school,
-      logoUrl: school.logoUrl?.trim() || branding.logoUrl || DEFAULT_LOGO,
-      welcomeLogo: school.welcomeLogo?.trim() || branding.welcomeLogo || DEFAULT_LOGO,
-      welcomeBackground: school.welcomeBackground?.trim() || branding.welcomeBackground || DEFAULT_WELCOME_BACKGROUND,
-      shortName: school.shortName?.trim() || branding.shortName
+      logo: school.logo?.trim() || branding.logo || DEFAULT_LOGO,
+      banner: school.banner?.trim() || branding.banner || DEFAULT_LOGO,
     };
   }
 }

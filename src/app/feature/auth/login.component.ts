@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthService } from '../../core/auth/auth.service';
+import { AuthService, UserRegistrationRequest } from '../../core/auth/auth.service';
 import { School, SchoolService } from '../../core/auth/school.service';
 
 @Component({
@@ -20,10 +20,12 @@ export class LoginComponent {
   protected readonly password = signal('');
   protected readonly schools = signal<School[]>([]);
   protected readonly selectedSchoolId = signal('');
+  protected readonly adminToken = signal<string>('');
   protected readonly selectedSchool = computed(() =>
     this.schools().find(school => String(school.id) === this.selectedSchoolId())
   );
   protected readonly isLoadingSchools = signal(true);
+  protected readonly isTokenAvailable = computed(() => this.adminToken() !== '');
   protected readonly schoolError = signal('');
   protected readonly isSubmitting = signal(false);
   protected readonly errorMessage = signal('');
@@ -42,6 +44,42 @@ export class LoginComponent {
     });
   }
 
+  setSelectedSchool(schoolId: string): void {
+    this.selectedSchoolId.set(schoolId);
+    this.getAdminToken();
+  }
+  createAdminUser(): void {
+    const requetBody = {
+      username: this.username().trim(),
+      password: this.password(),
+      phoneNumber: '0000000000',
+      role: 'ADMIN',
+    } as UserRegistrationRequest;
+    this.authService.createAdmin(requetBody, this.adminToken()).subscribe({
+      next: () => {
+        this.username.set('');
+        this.password.set('');
+        this.selectedSchoolId.set('');
+        this.adminToken.set('');
+        this.errorMessage.set('Admin user created successfully. You can now sign in.');
+      },
+      error: () => {
+        this.errorMessage.set('Unable to create admin user. Check your details and try again.');
+      }
+    });
+
+  }
+
+  getAdminToken(): void {
+    this.authService.getAdminToken().subscribe({
+      next: (token) => {
+        this.adminToken.set(token);
+      },
+      error: () => {
+        this.adminToken.set('');
+      }
+    });
+  }
   protected submit(): void {
     const selectedSchool = this.schools().find(school => String(school.id) === this.selectedSchoolId());
     if (!selectedSchool || !this.username().trim() || !this.password()) {
@@ -51,7 +89,7 @@ export class LoginComponent {
 
     this.isSubmitting.set(true);
     this.errorMessage.set('');
-    this.authService.setSchoolId(String(selectedSchool.id));
+    this.authService.setSchoolId(String(selectedSchool.schoolCode));
     this.authService.login({
       username: this.username().trim(),
       password: this.password()
