@@ -10,7 +10,6 @@ import { StudentLeaveComponent } from './feature/leave/student-leave.component';
 import { StudentClassmatesComponent } from './feature/people/student-classmates.component';
 import { StudentTeachersComponent } from './feature/people/student-teachers.component';
 import { StudentHomeworkComponent } from './feature/homework/student-homework.component';
-import { FeaturePageComponent } from './feature/main/feature-page.component';
 import { TeacherAnnouncementsComponent } from './feature/announcements/teacher-announcements.component';
 import { TeacherExamResultsComponent } from './feature/exams/teacher-exam-results.component';
 import { TeacherEventsComponent } from './feature/events/teacher-events.component';
@@ -24,6 +23,10 @@ import { AdminStudentsComponent } from './feature/people/admin-students.componen
 import { AdminFeesComponent } from './feature/fees/admin-fees.component';
 import { AdminDataComponent } from './feature/main/admin-data.component';
 import { adminGuard } from './core/auth/admin.guard';
+import { ProfilePageComponent } from './feature/profile/profile-page.component';
+import { NotificationsPageComponent } from './feature/notifications/notifications-page.component';
+import { StudentFeeComponent } from './feature/fees/student-fee.component';
+import { StudentDatesheetComponent } from './feature/exams/student-datesheet.component';
 
 export const routes: Routes = [
 	{ path: 'login', component: LoginComponent },
@@ -47,8 +50,10 @@ export const routes: Routes = [
 	{ path: 'student/classmates', component: StudentClassmatesComponent, canActivate: [authGuard] },
 	{ path: 'student/teacher', component: StudentTeachersComponent, canActivate: [authGuard] },
 	{ path: 'student/homework', component: StudentHomeworkComponent, canActivate: [authGuard] },
-	{ path: 'workspace/:id', component: FeaturePageComponent, canActivate: [authGuard] },
-	{ path: 'profile', component: FeaturePageComponent, canActivate: [authGuard] },
-	{ path: 'notifications', component: FeaturePageComponent, canActivate: [authGuard] },
+	{ path: 'student/profile', component: ProfilePageComponent, canActivate: [authGuard] },
+	{ path: 'student/fee', component: StudentFeeComponent, canActivate: [authGuard] },
+	{ path: 'student/datesheet', component: StudentDatesheetComponent, canActivate: [authGuard] },
+	{ path: 'profile', component: ProfilePageComponent, canActivate: [authGuard] },
+	{ path: 'notifications', component: NotificationsPageComponent, canActivate: [authGuard] },
 	{ path: '**', redirectTo: '' }
 ];
