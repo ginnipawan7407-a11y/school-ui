@@ -14,6 +14,41 @@ import {
   StudentRosterEntry
 } from '../../common/model/models';
 
+interface StudentRosterEntry {
+  id: number;
+  name: string;
+  rollNumber: number;
+  admissionNumber: number;
+  classId: number;
+  sectionName: string;
+}
+
+interface AttendanceApiRecord {
+  id: number;
+  admissionNumber: number;
+  teacherId: number;
+  classId: number;
+  sectionName: string;
+  attendanceDate: string;
+  status: 'PRESENT' | 'ABSENT' | 'LEAVE' | string;
+  remarks: string;
+}
+
+interface AttendanceApiResponse {
+  data: AttendanceApiRecord[];
+}
+
+interface AttendanceSubmission {
+  id: number;
+  admissionNumber: number;
+  teacherId: number;
+  classId: number;
+  sectionName: string;
+  attendanceDate: string;
+  status: 'PRESENT' | 'ABSENT';
+  remarks: string;
+}
+
 const FALLBACK_STUDENTS: AttendanceStudent[] = [
   { id: 1, name: 'Aarav Sharma', rollNumber: 'OA-801', present: true },
   { id: 2, name: 'Aanya Patel', rollNumber: 'OA-802', present: true },
