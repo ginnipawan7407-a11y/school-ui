@@ -24,7 +24,7 @@ export class TeacherAnnouncementsComponent {
   protected readonly published = signal(true);
   protected readonly isSaving = signal(false);
   protected readonly statusMessage = signal('');
-  protected readonly sectionOptions = computed(() => this.classOptions().find(x => x.classId === this.className())?.sections);
+  protected readonly sectionOptions = computed(() => this.classOptions().find(x => x.classId === this.className())?.sections ?? []);
 
   constructor() { 
     this.loadClasses();
@@ -55,7 +55,12 @@ export class TeacherAnnouncementsComponent {
 
   protected onSelectChange(event: Event, field: 'className' | 'section'): void {
     const value = (event.target as HTMLSelectElement).value;
-    field === 'className' ? this.className.set(value) : this.section.set(value);
+    if (field === 'className') {
+      this.className.set(value);
+      this.section.set('All');
+    } else {
+      this.section.set(value);
+    }
     this.statusMessage.set('');
     if (!this.editingId()) this.loadAnnouncements();
   }
