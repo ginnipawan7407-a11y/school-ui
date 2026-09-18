@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { ProfileService } from '../profile/profile.service';
-import { apiUrl, attendanceApiUrl } from '../../core/config/api.config';
+import { attendanceApiUrl, studentsApiUrl } from '../../core/config/api.config';
 import {
   AttendanceApiRecord,
   AttendanceApiResponse,
@@ -14,40 +14,6 @@ import {
   StudentRosterEntry
 } from '../../common/model/models';
 
-interface StudentRosterEntry {
-  id: number;
-  name: string;
-  rollNumber: number;
-  admissionNumber: number;
-  classId: number;
-  sectionName: string;
-}
-
-interface AttendanceApiRecord {
-  id: number;
-  admissionNumber: number;
-  teacherId: number;
-  classId: number;
-  sectionName: string;
-  attendanceDate: string;
-  status: 'PRESENT' | 'ABSENT' | 'LEAVE' | string;
-  remarks: string;
-}
-
-interface AttendanceApiResponse {
-  data: AttendanceApiRecord[];
-}
-
-interface AttendanceSubmission {
-  id: number;
-  admissionNumber: number;
-  teacherId: number;
-  classId: number;
-  sectionName: string;
-  attendanceDate: string;
-  status: 'PRESENT' | 'ABSENT';
-  remarks: string;
-}
 
 const FALLBACK_STUDENTS: AttendanceStudent[] = [
   { id: 1, name: 'Aarav Sharma', rollNumber: 'OA-801', present: true },
@@ -65,7 +31,7 @@ export class AttendanceService {
   private readonly http = inject(HttpClient);
   private readonly profileService = inject(ProfileService);
   getSummary(): Observable<AttendanceSummary> {
-    return this.http.get<AttendanceSummary>(apiUrl('/api/attendance/summary')).pipe(
+    return this.http.get<AttendanceSummary>(attendanceApiUrl('/summary')).pipe(
       catchError(() => of({ present: 28, absent: 2, late: 1 }))
     );
   }
@@ -73,7 +39,7 @@ export class AttendanceService {
   getStudents(className: string, section: string, date: string): Observable<AttendanceStudent[]> {
     const classId = this.classIdFromName(className);
     const roster$ = this.http.get<{ data: StudentRosterEntry[] }>(
-      apiUrl(`/api/v1/students/class/${classId}/section/${encodeURIComponent(section)}`)
+      studentsApiUrl(`/class/${classId}/section/${encodeURIComponent(section)}`)
     );
     const attendance$ = this.getClassAttendance(classId, section, date);
     return forkJoin({ roster: roster$, attendance: attendance$ }).pipe(
@@ -100,8 +66,8 @@ export class AttendanceService {
 
   getStudentHistory(className: string, section: string, studentId: number, startDate: string, endDate: string): Observable<AttendanceRecord[]> {
     const params = `class=${encodeURIComponent(className)}&section=${encodeURIComponent(section)}&studentId=${studentId}&startDate=${startDate}&endDate=${endDate}`;
-    return this.http.get<AttendanceRecord[]>(apiUrl(`/api/attendance/history?${params}`)).pipe(
-      catchError(() => of(this.fallbackHistory(startDate, endDate, studentId)))
+    return this.http.get<AttendanceRecord[]>(attendanceApiUrl(`/history?${params}`)).pipe(
+      catchError(() => of())
     );
   }
 
@@ -145,7 +111,7 @@ export class AttendanceService {
 
   getClassHistory(className: string, section: string, startDate: string, endDate: string): Observable<ClassAttendanceDay[]> {
     const params = `class=${encodeURIComponent(className)}&section=${encodeURIComponent(section)}&startDate=${startDate}&endDate=${endDate}`;
-    return this.http.get<ClassAttendanceDay[]>(apiUrl(`/api/attendance/class-history?${params}`)).pipe(
+    return this.http.get<ClassAttendanceDay[]>(attendanceApiUrl(`/class-history?${params}`)).pipe(
       catchError(() => of(this.fallbackClassHistory(startDate, endDate)))
     );
   }
@@ -164,24 +130,5 @@ export class AttendanceService {
       index++;
     }
     return days;
-  }
-
-  private fallbackHistory(startDate: string, endDate: string, studentId: number): AttendanceRecord[] {
-    const records: AttendanceRecord[] = [];
-    const start = new Date(`${startDate}T00:00:00`);
-    const end = new Date(`${endDate}T00:00:00`);
-    const date = new Date(start);
-    let dayIndex = 0;
-    while (date <= end && dayIndex < 31) {
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      records.push({
-        date: `${date.getFullYear()}-${month}-${day}`,
-        present: (dayIndex + studentId) % 5 !== 2
-      });
-      date.setDate(date.getDate() + 1);
-      dayIndex++;
-    }
-    return records;
   }
 }

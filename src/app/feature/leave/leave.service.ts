@@ -1,22 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
-import { apiUrl } from '../../core/config/api.config';
-
-export interface LeaveSummary { pending: number; approved: number; remaining: number; }
-export interface LeaveStudent { id: number; name: string; className: string; section: string; }
-export type LeaveStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
-export interface LeaveApplication {
-  id: number;
-  studentId: number;
-  studentName: string;
-  leaveType: string;
-  startDate: string;
-  endDate: string;
-  reason: string;
-  status: LeaveStatus;
-}
-export interface StudentLeaveApplication extends LeaveApplication { studentId: number; }
+import { leaveApiUrl } from '../../core/config/api.config';
+import { LeaveApplication, LeaveStatus, LeaveStudent, LeaveSummary, StudentLeaveApplication } from '../../common/model/models';
 
 const FALLBACK_STUDENTS: LeaveStudent[] = [
   { id: 1, name: 'Aarav Sharma', className: 'Class 8', section: 'A' },
@@ -36,37 +22,37 @@ const FALLBACK_APPLICATIONS: LeaveApplication[] = [
 export class LeaveService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<LeaveSummary> {
-    return this.http.get<LeaveSummary>(apiUrl('/api/leave/summary')).pipe(
+    return this.http.get<LeaveSummary>(leaveApiUrl('/summary')).pipe(
       catchError(() => of({ pending: 1, approved: 4, remaining: 12 }))
     );
   }
 
   getStudents(): Observable<LeaveStudent[]> {
-    return this.http.get<LeaveStudent[]>(apiUrl('/api/leave/students')).pipe(
+    return this.http.get<LeaveStudent[]>(leaveApiUrl('/students')).pipe(
       catchError(() => of(FALLBACK_STUDENTS.map(student => ({ ...student }))))
     );
   }
 
   getApplications(): Observable<LeaveApplication[]> {
-    return this.http.get<LeaveApplication[]>(apiUrl('/api/leave/applications')).pipe(
+    return this.http.get<LeaveApplication[]>(leaveApiUrl('/applications')).pipe(
       catchError(() => of(FALLBACK_APPLICATIONS.map(application => ({ ...application }))))
     );
   }
 
   applyLeave(application: Omit<LeaveApplication, 'id' | 'status'>): Observable<LeaveApplication> {
-    return this.http.post<LeaveApplication>(apiUrl('/api/leave/applications'), application).pipe(
+    return this.http.post<LeaveApplication>(leaveApiUrl('/applications'), application).pipe(
       catchError(() => of({ ...application, id: Date.now(), status: 'PENDING' as LeaveStatus }))
     );
   }
 
   updateStatus(applicationId: number, status: LeaveStatus): Observable<{ success: boolean }> {
-    return this.http.patch<{ success: boolean }>(apiUrl(`/api/leave/applications/${applicationId}/status`), { status }).pipe(
+    return this.http.patch<{ success: boolean }>(leaveApiUrl(`/applications/${applicationId}/status`), { status }).pipe(
       catchError(() => of({ success: true }))
     );
   }
 
   getMyApplications(studentId: number): Observable<StudentLeaveApplication[]> {
-    return this.http.get<StudentLeaveApplication[]>(apiUrl(`/api/leave/my-applications?studentId=${studentId}`)).pipe(
+    return this.http.get<StudentLeaveApplication[]>(leaveApiUrl(`/my-applications?studentId=${studentId}`)).pipe(
       catchError(() => of(FALLBACK_APPLICATIONS.filter(application => application.studentId === studentId).map(application => ({ ...application }))))
     );
   }

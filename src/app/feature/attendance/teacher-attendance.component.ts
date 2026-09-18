@@ -2,24 +2,12 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AttendanceService } from './attendance.service';
-import { AttendanceRecord, AttendanceStudent } from '../../common/model/models';
-import { LeaveApplication, LeaveService } from '../leave/leave.service';
+import { AttendanceRecord, AttendanceStudent, CalendarDay, CalendarMonth, LeaveApplication } from '../../common/model/models';
+import { LeaveService } from '../leave/leave.service';
+
 
 type AttendanceMode = 'mark' | 'history';
 
-interface CalendarDay {
-  date: string;
-  day: number;
-  inRange: boolean;
-  present: boolean | null;
-  onLeave: boolean;
-}
-
-interface CalendarMonth {
-  key: string;
-  label: string;
-  days: (CalendarDay | null)[];
-}
 
 @Component({
   selector: 'app-teacher-attendance',

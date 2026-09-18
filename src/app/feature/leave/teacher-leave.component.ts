@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { LeaveApplication, LeaveService, LeaveStatus, LeaveStudent } from './leave.service';
+import {LeaveService} from './leave.service';
+import { LeaveApplication, LeaveStatus, LeaveStudent } from '../../common/model/models';
 
 type LeaveTab = 'apply' | 'applied';
 

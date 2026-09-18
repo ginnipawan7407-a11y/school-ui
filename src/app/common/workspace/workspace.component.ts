@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { MenuItem, Role } from '../model/dashboard.models';
+import { MenuItem, Role } from '../model/models';
 
 @Component({
   selector: 'app-workspace',

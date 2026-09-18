@@ -1,8 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ExamResultRow, ExamsService, ResultFilter, ResultPayload } from './exams.service';
-
+import { ExamsService } from './exams.service';
+import { ExamResultRow, ResultFilter, ResultPayload } from '../../common/model/models';
 type ResultMode = 'save' | 'view';
 type ResultSortColumn = 'studentName' | 'subject';
 type SortDirection = 'asc' | 'desc';

@@ -1,7 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { HomeworkService, StudentWorkItem } from './homework.service';
+import { HomeworkService} from './homework.service';
+import { StudentWorkItem } from '../../common/model/models';
 
 interface WeekDay { date: string; label: string; dayNumber: number; }
 

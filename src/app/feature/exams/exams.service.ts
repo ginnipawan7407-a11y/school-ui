@@ -1,25 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
-import { apiUrl } from '../../core/config/api.config';
-
-export interface ExamSummary { nextExam: string; subject: string; resultStatus: string; }
-
-export interface ExamResultRow {
-  id: number;
-  studentName: string;
-  rollNumber: string;
-  admissionNumber: string;
-  subject: string;
-  obtainedMark: number;
-  totalMarks: number;
-  paperFileName?: string;
-  paperUrl?: string;
-}
-
-export interface ResultFilter { className: string; section: string; academicYear: string; studentName?: string; }
-export interface ResultPayload extends ResultFilter { rows: ExamResultRow[]; finalResultFile?: File | null; }
-export interface ResultUploadResponse { success: boolean; message: string; }
+import {academicApiUrl } from '../../core/config/api.config';
+import { ExamResultRow, ExamSummary, ResultFilter, ResultPayload, ResultUploadResponse } from '../../common/model/models';
 
 const FALLBACK_RESULTS: ExamResultRow[] = [
   { id: 1, studentName: 'Aarav Sharma', rollNumber: 'OA-801', admissionNumber: 'ADM-2401', subject: 'Mathematics', obtainedMark: 82, totalMarks: 100 },
@@ -33,7 +16,7 @@ const FALLBACK_RESULTS: ExamResultRow[] = [
 export class ExamsService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<ExamSummary> {
-    return this.http.get<ExamSummary>(apiUrl('/api/exams/summary')).pipe(
+    return this.http.get<ExamSummary>(academicApiUrl('/api/exams/summary')).pipe(
       catchError(() => of({ nextExam: '14 October', subject: 'Mathematics', resultStatus: 'Published' }))
     );
   }
@@ -41,7 +24,7 @@ export class ExamsService {
   getResults(filter: ResultFilter): Observable<ExamResultRow[]> {
     const params = new URLSearchParams({ class: filter.className, section: filter.section, academicYear: filter.academicYear });
     if (filter.studentName) params.set('studentName', filter.studentName);
-    return this.http.get<ExamResultRow[]>(apiUrl(`/api/exams/results?${params}`)).pipe(
+    return this.http.get<ExamResultRow[]>(academicApiUrl(`/api/exams/results?${params}`)).pipe(
       catchError(() => of(FALLBACK_RESULTS.filter(result => !filter.studentName || result.studentName === filter.studentName).map(result => ({ ...result }))))
     );
   }
@@ -53,7 +36,7 @@ export class ExamsService {
     formData.append('academicYear', payload.academicYear);
     formData.append('rows', JSON.stringify(payload.rows));
     if (payload.finalResultFile) formData.append('finalResultFile', payload.finalResultFile, payload.finalResultFile.name);
-    return this.http.post<ResultUploadResponse>(apiUrl('/api/exams/results'), formData).pipe(
+    return this.http.post<ResultUploadResponse>(academicApiUrl('/api/exams/results'), formData).pipe(
       catchError(() => of({ success: true, message: 'Results saved using the local preview.' }))
     );
   }
@@ -62,7 +45,7 @@ export class ExamsService {
     const formData = new FormData();
     formData.append('resultId', String(resultId));
     formData.append('paper', file, file.name);
-    return this.http.post<ResultUploadResponse>(apiUrl('/api/exams/results/subject-paper'), formData).pipe(
+    return this.http.post<ResultUploadResponse>(academicApiUrl('/api/exams/results/subject-paper'), formData).pipe(
       catchError(() => of({ success: true, message: 'Subject paper uploaded using the local preview.' }))
     );
   }

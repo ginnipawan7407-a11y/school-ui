@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { EventsService, SchoolEvent } from './events.service';
+import { EventsService } from './events.service';
+import { SchoolEvent } from '../../common/model/models';
 
 @Component({
   selector: 'app-student-events',

@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { AdminTeacher, PeopleService } from './people.service';
+import { PeopleService } from './people.service';
+import { AdminTeacher } from '../../common/model/models';
 
 @Component({
   selector: 'app-admin-teachers',

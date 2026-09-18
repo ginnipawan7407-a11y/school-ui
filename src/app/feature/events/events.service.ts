@@ -1,20 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
-import { apiUrl } from '../../core/config/api.config';
-
-export interface SchoolEvent {
-  id?: number;
-  title: string;
-  date: string;
-  attachments?: string[];
-}
-
-export interface EventPayload {
-  title: string;
-  date: string;
-  files: File[];
-}
+import { EVENT_BASE_BASE_URL } from '../../core/config/api.config';
+import { SchoolEvent, EventPayload } from '../../common/model/models';
 
 @Injectable({ providedIn: 'root' })
 export class EventsService {
@@ -25,7 +13,7 @@ export class EventsService {
   ];
 
   getUpcoming(): Observable<SchoolEvent[]> {
-    return this.http.get<SchoolEvent[]>(apiUrl('/api/events')).pipe(
+    return this.http.get<SchoolEvent[]>(EVENT_BASE_BASE_URL).pipe(
       catchError(() => of(this.fallbackEvents.slice(0, 2)))
     );
   }

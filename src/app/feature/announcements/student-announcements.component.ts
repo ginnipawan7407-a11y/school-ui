@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { Announcement, AnnouncementsService } from './announcements.service';
+import { AnnouncementsService } from './announcements.service';
+import { Announcement } from '../../common/model/models';
 
 @Component({
   selector: 'app-student-announcements',

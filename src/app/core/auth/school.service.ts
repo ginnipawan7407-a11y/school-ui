@@ -1,22 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { apiUrl } from '../config/api.config';
-
-export interface School {
-  id: number;
-  schoolName: string;
-  schoolCode: string;
-  address?: String;
-  phone?: String;
-  email?: String;
-  website?: String;
-  principalName?: String;
-  announcement?: String;
-  logo?: String;
-  favicon?: String;
-  banner?: String;
-}
+import { schoolsApiUrl } from '../config/api.config';
+import { School } from '../../common/model/models';
 
 const DEFAULT_LOGO = '/image/default-logo.svg';
 const DEFAULT_WELCOME_BACKGROUND = '/image/school-welcom-background.svg';
@@ -47,7 +33,7 @@ export class SchoolService {
   private readonly schools = signal<School[]>(DUMMY_SCHOOLS);
 
   getSchools(): Observable<School[]> {
-    return this.http.get<SchoolResponse>(apiUrl('/api/v1/schools/public/all')).pipe(
+    return this.http.get<SchoolResponse>(schoolsApiUrl('/public/all')).pipe(
       map(response => response.data.map(school => this.withBranding(school))),
       tap(schools => this.schools.set(schools)),
       catchError(() => of(DUMMY_SCHOOLS))
@@ -55,7 +41,7 @@ export class SchoolService {
   }
 
   getSchoolByCode(schoolCode: string): Observable<School> {
-    return this.http.get<{ data: School }>(apiUrl(`/api/v1/schools/public/code/${schoolCode}`)).pipe(
+    return this.http.get<{ data: School }>(schoolsApiUrl(`/public/code/${schoolCode}`)).pipe(
       map(response => this.withBranding(response.data)),
       catchError(() => of(this.withBranding(DEFAULT_SCHOOL)))
     );

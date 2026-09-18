@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { apiUrl } from '../../core/config/api.config';
+import { apiUrl, bulkApiUrl } from '../../core/config/api.config';
 import { Observable } from 'rxjs';
 
 export type AdminDataType = 'Student' | 'Teacher' | 'Section';
@@ -12,28 +12,28 @@ export class AdminDataService {
   importFile(file: File, dataType: AdminDataType): Observable<void> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<void>(apiUrl('/api/v1/bulk/import-csv/' + dataType), formData);
+    return this.http.post<void>(bulkApiUrl('/import-csv/' + dataType), formData);
   }
 
   exportRecords(dataType: AdminDataType): Observable<Blob> {
     if (dataType === 'Teacher') {
-      return this.http.get(apiUrl('/api/v1/bulk/export/teacher'), {
+      return this.http.get(bulkApiUrl('/export/teacher'), {
         responseType: 'blob'
       });
     }
     else if (dataType === 'Student') {
-      return this.http.get(apiUrl('/api/v1/bulk/export/student/class/0/section/0'), {
+      return this.http.get(bulkApiUrl('/export/student/class/0/section/0'), {
         responseType: 'blob'
       });
     }
     else {
-      return this.http.get(apiUrl('/api/v1/bulk/export/section'), {
+      return this.http.get(bulkApiUrl('/export/section'), {
         responseType: 'blob'
       });
     }
   }
     exportSample(dataType: AdminDataType): Observable<Blob> {
-    return this.http.get(apiUrl('/api/v1/bulk/template/' + dataType), {
+    return this.http.get(bulkApiUrl('/template/' + dataType), {
       responseType: 'blob'
     });
   }

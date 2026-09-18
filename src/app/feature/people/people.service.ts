@@ -1,71 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
-import { apiUrl } from '../../core/config/api.config';
-
-export interface PeopleSummary { students: number; teachers: number; classmates: number; }
-export interface StudentDirectoryEntry {
-  id: number;
-  name: string;
-  rollNumber: string;
-  className: string;
-  section: string;
-  gender: string;
-  parentName: string;
-  parentPhone: string;
-  parentRelation: string;
-}
-export interface AdminStudent {
-  id: number | null;
-  name: string;
-  gender: string;
-  email: string;
-  admissionNumber: number;
-  rollNumber: number;
-  classId: number;
-  sectionName: string;
-  fatherName: string;
-  motherName: string;
-  dateOfBirth: string;
-  address: string;
-  parentPhone: string;
-}
-export interface AdminTeacher {
-  id: number | null;
-  name: string;
-  gender: string;
-  email: string;
-  username: string;
-  employeeId: string;
-  qualification: string;
-  specialization: string;
-  joiningDate: string;
-  experienceYears: number;
-  address: string;
-  phone: string;
-  dateOfJoining?: string;
-  experience?: number;
-}
-interface StudentResponse {
-  status: string;
-  code: number;
-  message: string;
-  data: AdminStudent[];
-}
-interface TeacherResponse {
-  status: string;
-  code: number;
-  message: string;
-  data: AdminTeacher[];
-}
-interface TeacherDetailResponse {
-  status: string;
-  code: number;
-  message: string;
-  data: AdminTeacher;
-}
-export interface Classmate { id: number; name: string; rollNumber: string; photoUrl: string; }
-export interface TeacherContact { id: number; name: string; subject: string; phone: string; email: string; isClassTeacher: boolean; photoUrl: string; }
+import { studentsApiUrl, TEACHERS_BASE_URL, teachersApiUrl, usersApiUrl } from '../../core/config/api.config';
+import { AdminStudent, AdminTeacher, Classmate, PeopleSummary, StudentDirectoryEntry, StudentResponse, TeacherContact, TeacherDetailResponse, TeacherResponse } from '../../common/model/models';
 
 const FALLBACK_DIRECTORY: StudentDirectoryEntry[] = [
   { id: 1, name: 'Aarav Sharma', rollNumber: 'OA-801', className: 'Class 8', section: 'A', gender: 'Male', parentName: 'Rajesh Sharma', parentPhone: '+1 555 0101', parentRelation: 'Father' },
@@ -84,14 +21,14 @@ const FALLBACK_DIRECTORY: StudentDirectoryEntry[] = [
 export class PeopleService {
   private readonly http = inject(HttpClient);
   getSummary(): Observable<PeopleSummary> {
-    return this.http.get<PeopleSummary>(apiUrl('/api/people/summary')).pipe(
+    return this.http.get<PeopleSummary>(usersApiUrl('/people/summary')).pipe(
       catchError(() => of({ students: 324, teachers: 28, classmates: 31 }))
     );
   }
 
   getStudentDirectory(className: string, section: string): Observable<StudentDirectoryEntry[]> {
     const params = `class=${encodeURIComponent(className)}&section=${encodeURIComponent(section)}`;
-    return this.http.get<StudentDirectoryEntry[]>(apiUrl(`/api/people/students?${params}`)).pipe(
+    return this.http.get<StudentDirectoryEntry[]>(usersApiUrl(`/people/students?${params}`)).pipe(
       catchError(() => of(FALLBACK_DIRECTORY.filter(student =>
         student.className === className && student.section === section
       ).map(student => ({ ...student }))))
@@ -99,38 +36,38 @@ export class PeopleService {
   }
 
   getStudentsByClassAndSection(classId: number, section: string): Observable<AdminStudent[]> {
-    return this.http.get<StudentResponse>(apiUrl(`/api/v1/students/class/${classId}/section/${encodeURIComponent(section)}`))
+    return this.http.get<StudentResponse>(studentsApiUrl(`/class/${classId}/section/${encodeURIComponent(section)}`))
       .pipe(map(response => response.data));
   }
 
   getAdminTeachers(): Observable<AdminTeacher[]> {
-    return this.http.get<TeacherResponse>(apiUrl('/api/v1/teachers'))
+    return this.http.get<TeacherResponse>(TEACHERS_BASE_URL)
       .pipe(map(response => response.data.map(teacher => this.normalizeTeacher(teacher))));
   }
 
   getAdminTeacher(id: number): Observable<AdminTeacher> {
-    return this.http.get<TeacherDetailResponse>(apiUrl(`/api/v1/teachers/${id}`))
+    return this.http.get<TeacherDetailResponse>(teachersApiUrl(`/${id}`))
       .pipe(map(response => this.normalizeTeacher(response.data)));
   }
 
   updateStudent(student: AdminStudent): Observable<void> {
-    return this.http.put<void>(apiUrl(`/api/v1/students/${student.id}`), student);
+    return this.http.put<void>(studentsApiUrl(`/${student.id}`), student);
   }
 
   createStudent(student: AdminStudent): Observable<void> {
-    return this.http.post<void>(apiUrl('/api/v1/students'), student);
+    return this.http.post<void>(studentsApiUrl(''), student);
   }
 
   updateTeacher(teacher: AdminTeacher): Observable<void> {
-    return this.http.put<void>(apiUrl(`/api/v1/teachers/${teacher.id}`), teacher);
+    return this.http.put<void>(teachersApiUrl(`/${teacher.id}`), teacher);
   }
 
   createTeacher(teacher: AdminTeacher): Observable<void> {
-    return this.http.post<void>(apiUrl('/api/v1/teachers'), teacher);
+    return this.http.post<void>(teachersApiUrl(''), teacher);
   }
 
   getClassmates(studentId: number): Observable<Classmate[]> {
-    return this.http.get<Classmate[]>(apiUrl(`/api/people/classmates?studentId=${studentId}`)).pipe(
+    return this.http.get<Classmate[]>(studentsApiUrl(`/classmates?studentId=${studentId}`)).pipe(
       catchError(() => of(FALLBACK_DIRECTORY.slice(0, 8).filter(student => student.id !== studentId).map(student => ({
         id: student.id, name: student.name, rollNumber: student.rollNumber, photoUrl: `https://i.pravatar.cc/160?img=${student.id + 10}`
       }))))
@@ -146,7 +83,7 @@ export class PeopleService {
   }
 
   getTeachers(studentId: number): Observable<TeacherContact[]> {
-    return this.http.get<TeacherContact[]>(apiUrl(`/api/people/teachers?studentId=${studentId}`)).pipe(
+    return this.http.get<TeacherContact[]>(studentsApiUrl(`/teachers?studentId=${studentId}`)).pipe(
       catchError(() => of([
         { id: 1, name: 'Maya Wilson', subject: 'Class Teacher · Mathematics', phone: '+1 555 0201', email: 'maya.wilson@oakridge.edu', isClassTeacher: true, photoUrl: 'https://i.pravatar.cc/160?img=47' },
         { id: 2, name: 'Daniel Brooks', subject: 'Science', phone: '+1 555 0202', email: 'daniel.brooks@oakridge.edu', isClassTeacher: false, photoUrl: 'https://i.pravatar.cc/160?img=12' },

@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { LeaveService, LeaveStatus, StudentLeaveApplication } from './leave.service';
+import { LeaveService } from './leave.service';
+import { LeaveStatus, StudentLeaveApplication } from '../../common/model/models';
 
 @Component({
   selector: 'app-student-leave',

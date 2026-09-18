@@ -2,7 +2,8 @@ import { DecimalPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { EventPayload, EventsService, SchoolEvent } from './events.service';
+import { SchoolEvent, EventPayload} from '../../common/model/models';
+import { EventsService } from './events.service';
 
 @Component({
   selector: 'app-teacher-events',

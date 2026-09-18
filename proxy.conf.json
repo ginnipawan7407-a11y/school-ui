@@ -6,13 +6,5 @@
     "pathRewrite": {
       "^/rest": ""
     }
-  },
-  "/attendance": {
-    "target": "http://192.168.1.10:8002",
-    "secure": false,
-    "changeOrigin": true,
-    "pathRewrite": {
-      "^/attendance": ""
-    }
   }
 }

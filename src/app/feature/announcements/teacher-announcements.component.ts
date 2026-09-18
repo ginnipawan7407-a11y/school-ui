@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { Announcement, AnnouncementPayload, AnnouncementsService } from './announcements.service';
+import { AnnouncementsService } from './announcements.service';
+import { Announcement, AnnouncementPayload, ClassSectionOption } from '../../common/model/models';
 
 @Component({
   selector: 'app-teacher-announcements',
@@ -13,18 +14,25 @@ export class TeacherAnnouncementsComponent {
   protected readonly announcements = signal<Announcement[]>([]);
   protected readonly activeTab = signal<'new' | 'published'>('new');
   protected readonly editingId = signal<number | null>(null);
+  protected readonly classOptions = signal<ClassSectionOption[]>([]);
   protected readonly title = signal('');
   protected readonly message = signal('');
-  protected readonly className = signal('Class 8');
-  protected readonly section = signal('A');
+  protected readonly className = signal(this.classOptions().length > 0 ? this.classOptions()[0].classId : '');
+  protected readonly section = signal('All');
   protected readonly published = signal(true);
   protected readonly isSaving = signal(false);
   protected readonly statusMessage = signal('');
-  protected readonly classOptions = ['All classes', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'];
-  protected readonly sectionOptions = ['All', 'A', 'B', 'C'];
+  protected readonly sectionOptions = computed(() => this.classOptions().find(x => x.classId === this.className())?.sections);
 
-  constructor() { this.loadAnnouncements(); }
+  constructor() { 
+    this.loadClasses();
+    this.loadAnnouncements();
+   }
 
+   protected loadClasses(){
+  
+    //TODO: add class service and read class details.
+   }
   protected loadAnnouncements(): void {
     this.announcementsService.getAll(this.className(), this.section()).subscribe(data => this.announcements.set(data));
   }

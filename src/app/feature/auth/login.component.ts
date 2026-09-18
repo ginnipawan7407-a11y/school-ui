@@ -2,8 +2,10 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AuthService, UserRegistrationRequest } from '../../core/auth/auth.service';
-import { School, SchoolService } from '../../core/auth/school.service';
+import { AuthService } from '../../core/auth/auth.service';
+import { SchoolService } from '../../core/auth/school.service';
+import { School, UserRegistrationRequest } from '../../common/model/models';
+
 
 @Component({
   selector: 'app-login',

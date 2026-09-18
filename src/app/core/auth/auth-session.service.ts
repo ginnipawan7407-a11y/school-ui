@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-import { Role } from '../../common/model/dashboard.models';
+import { Role } from '../../common/model/models';
 
 const TOKEN_KEY = 'school_auth_token';
 const ROLE_KEY = 'school_auth_role';

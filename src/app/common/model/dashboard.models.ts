@@ -1,17 +1,4 @@
-export type Role = 'Teacher' | 'Student' | 'Admin';
-
-export interface MenuItem {
-  id: string;
-  label: string;
-  detail: string;
-  icon: string;
-  tone: string;
-  roles: Role[];
-}
-
-export interface DashboardData {
-  menus: Record<Role, MenuItem[]>;
-}
+import { DashboardData } from "./models";
 
 export const FALLBACK_DASHBOARD_DATA: DashboardData = {
   menus: {

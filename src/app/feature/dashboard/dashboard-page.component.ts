@@ -3,11 +3,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { DashboardService } from './dashboard.service';
-import { FALLBACK_DASHBOARD_DATA, Role } from '../../common/model/dashboard.models';
+import { FALLBACK_DASHBOARD_DATA } from '../../common/model/dashboard.models';
 import { WelcomeComponent } from '../../common/welcome/welcome.component';
 import { WorkspaceComponent } from '../../common/workspace/workspace.component';
 import { AuthSessionService } from '../../core/auth/auth-session.service';
 import { SchoolService } from '../../core/auth/school.service';
+import { Role } from '../../common/model/models';
 
 @Component({
   selector: 'app-dashboard-page',

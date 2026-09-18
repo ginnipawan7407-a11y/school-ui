@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ExamResultRow, ExamsService } from './exams.service';
+import { ExamsService } from './exams.service';
+import { ExamResultRow} from '../../common/model/models';
 
 interface StudentResultSummary {
   subject: string;
