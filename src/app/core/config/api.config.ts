@@ -12,6 +12,7 @@ export const NOTIFICATION_SERVICE_API_BASE_URL = REST_API_BASE_URL + '/notificat
 export const LOGIN_URL = USER_SERVICE_API_BASE_URL + '/auth/login';
 export const CLASS_TEACHER_BASE_URL = USER_SERVICE_API_BASE_URL + '/class-teachers';
 export const CLASSES_BASE_URL = USER_SERVICE_API_BASE_URL + '/classes';
+export const CLASS_SECTION_BASE_URL = USER_SERVICE_API_BASE_URL + '/class-sections';
 export const IMPORT_EXPORT_BASE_URL = USER_SERVICE_API_BASE_URL + '/bulk';
 export const SCHOOLS_BASE_URL = USER_SERVICE_API_BASE_URL + '/schools';
 export const SECTIONS_BASE_URL = USER_SERVICE_API_BASE_URL + '/sections';
@@ -40,6 +41,7 @@ export const schoolsApiUrl = (path: string): string => `${SCHOOLS_BASE_URL}${pat
 export const sectionApiUrl = (path: string): string => `${SECTIONS_BASE_URL}${path}`;
 export const bulkApiUrl = (path: string): string => `${IMPORT_EXPORT_BASE_URL}${path}`;
 export const classesApiUrl = (path: string): string => `${CLASSES_BASE_URL}${path}`;
+export const classSectionApiUrl = (path: string): string => `${CLASS_SECTION_BASE_URL}${path}`;
 export const classTeacherApiUrl = (path: string): string => `${CLASS_TEACHER_BASE_URL}${path}`;
 
 export const academicApiUrl = (path: string): string => `${ACADEMIC_SERVICE_BASE_URL}${path}`;
@@ -57,4 +59,3 @@ export const reportApiUrl = (path: string): string => `${REPORT_BASE_URL}${path}
 
 export const paymentServiceApiUrl = (path: string): string => `${PAYMENT_SERVICE_API_BASE_URL}${path}`;
 export const notificationApiUrl = (path: string): string => `${NOTIFICATION_SERVICE_API_BASE_URL}${path}`;
-
