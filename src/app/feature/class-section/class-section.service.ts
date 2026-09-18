@@ -15,7 +15,8 @@ export class ClassSectionService {
         const classSections = new Map<string, ClassSectionOption>();
 
         response.data.forEach(classSection => {
-          const option = classSections.get(classSection.classId);
+          const classId = String(classSection.classId);
+          const option = classSections.get(classId);
           const section = {
             sectionId: classSection.id,
             sectionName: classSection.sectionName,
@@ -25,8 +26,8 @@ export class ClassSectionService {
           if (option) {
             option.sections.push(section);
           } else {
-            classSections.set(classSection.classId, {
-              classId: classSection.classId,
+            classSections.set(classId, {
+              classId,
               sections: [section]
             });
           }
