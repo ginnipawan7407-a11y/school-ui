@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AnnouncementsService } from './announcements.service';
+import { ClassSectionService } from '../class-section/class-section.service';
 import { Announcement, AnnouncementPayload, ClassSectionOption } from '../../common/model/models';
 
 @Component({
@@ -11,6 +12,7 @@ import { Announcement, AnnouncementPayload, ClassSectionOption } from '../../com
 })
 export class TeacherAnnouncementsComponent {
   private readonly announcementsService = inject(AnnouncementsService);
+  private readonly classSectionService = inject(ClassSectionService);
   protected readonly announcements = signal<Announcement[]>([]);
   protected readonly activeTab = signal<'new' | 'published'>('new');
   protected readonly editingId = signal<number | null>(null);
@@ -26,12 +28,20 @@ export class TeacherAnnouncementsComponent {
 
   constructor() { 
     this.loadClasses();
-    this.loadAnnouncements();
-   }
+    }
 
-   protected loadClasses(){
-  
-    //TODO: add class service and read class details.
+   protected loadClasses(): void {
+     this.classSectionService.getAll().subscribe({
+       next: classOptions => {
+         this.classOptions.set(classOptions);
+         this.className.set(classOptions[0]?.classId ?? '');
+         this.section.set('All');
+         this.loadAnnouncements();
+       },
+       error: () => {
+         this.statusMessage.set('Unable to load classes and sections.');
+       }
+     });
    }
   protected loadAnnouncements(): void {
     this.announcementsService.getAll(this.className(), this.section()).subscribe(data => this.announcements.set(data));
