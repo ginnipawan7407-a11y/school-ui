@@ -32,8 +32,8 @@ export class ClassSectionService {
             });
           }
         });
-
-        return [...classSections.values()];
+        const sorted = [...classSections.values()].sort((a,b) => Number(a.classId) - Number(b.classId));
+        return sorted;
       })
     );
   }
